@@ -1,0 +1,28 @@
+{
+  "background_color": "#ffffff",
+  "description": "Handpicked Chefs Serving Authentic Specialty Cuisines",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Knosh Lite",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Knosh Lite",
+  "start_url": "/",
+  "theme_color": "#f65a60",
+  "icons": [
+    {
+      "src": "https://knosh.in/assets/front/img/favicon.ico",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "https://beta.knosh.in/assets/front/img/knosh-lite-100X100.png",
+      "sizes": "100x100",
+      "type": "image/png"
+    },
+    {
+      "src": "https://beta.knosh.in/assets/front/img/knosh-lite-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
