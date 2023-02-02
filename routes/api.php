@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Order\OrderController;
 use App\Http\Controllers\Api\Rider\DunzoController;
 use App\Http\Controllers\Api\Rider\ShadowController;
 use App\Http\Controllers\Api\Razor\PayoutsController;
+use App\Http\Controllers\Api\V1\HomeController;
 use App\Http\Controllers\Api\Google\GoogleController;
 
 
@@ -115,6 +116,7 @@ Route::group([/*'namespace'=>'Api\Partner',*/'middleware'=>'api', 'middleware'=>
 Route::group(['middleware'=>'api','prefix'=>'api'/*,'middleware'=>'authcheck'*/],function() {
 	Route::get('webview/{page}',[CustomerController::class, 'webview']);
 	Route::get('homepage',[CustomerController::class, 'homepage']);
+	Route::get('home',[HomeController::class, 'homepage']);
 	Route::get('populardishes',[CustomerController::class, 'popularDishes']);
 	Route::get('chefinfo',[CustomerController::class, 'chefinfo']);
 	Route::get('chefinfonew',[CustomerController::class, 'chefinfonew']);

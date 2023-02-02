@@ -79,4 +79,11 @@ class Category extends Model
     public function scopeWithAndWhereHas($query, $relation, $constraint){
         return $query->whereHas($relation, $constraint)->with([$relation => $constraint]);
     }
+
+    public function getSubcategoryAttribute()
+    {
+        $p_id = $this->attributes['id'];
+        $sub_cate = Category::where('p_id',$p_id)->get();
+        return $sub_cate;
+    }
 }
