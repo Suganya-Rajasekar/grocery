@@ -1,0 +1,52 @@
+<?php
+Route::group(['as' =>'vendor.','prefix'=>'vendor','middleware'=>[/*'web',*/'auth','StripEmptyParams']],function() {
+	Route::get('/insights', [App\Http\Controllers\DashboardController::class, 'insights']);
+	Route::get('/pieChart', [App\Http\Controllers\DashboardController::class, 'pieChart']);
+	Route::get('/generatepdf/{id}', [App\Http\Controllers\PDFController::class, 'generateVendorPDF']);
+	Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+	Route::get('dashboard','App\Http\Controllers\DashboardController@vendor')->name('dashboard');
+	Route::resource('common', App\Http\Controllers\CommonController::class);
+	Route::resource('category', App\Http\Controllers\CategoryController::class);
+	Route::resource('chef', App\Http\Controllers\ChefController::class);
+	Route::resource('addon', App\Http\Controllers\AddonController::class);
+	Route::resource('order', App\Http\Controllers\OrderController::class);
+	Route::resource('review', App\Http\Controllers\ReviewController::class);
+	Route::resource('comment', App\Http\Controllers\CommentController::class);
+	Route::get('order/{id}/view',[App\Http\Controllers\OrderController::class, 'view']);
+	Route::put('orderstatuschange',[App\Http\Controllers\OrderController::class, 'orderStatusChange']);
+	Route::resource('earning_report', App\Http\Controllers\EarningController::class);
+	Route::get('earning_report/downloadfile',[App\Http\Controllers\OrderController::class, 'downloadfile']);
+	Route::get('menu_item/rearrange',[App\Http\Controllers\MenuitemController::class, 'orderrearrange']);
+	Route::put('menuitem/store',[App\Http\Controllers\MenuitemController::class, 'store']);
+
+	Route::resource('payout', App\Http\Controllers\PayoutController::class);
+	Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
+	Route::get('payout/orderlist/{payoutid}/{action}',[App\Http\Controllers\PayoutController::class, 'orderList'])->name('orderlist');
+	Route::get('/chef/{v_id}/edit_business',[App\Http\Controllers\ChefController::class, 'index'])->where('v_id', '[0-9]+');
+	Route::get('/chef/{v_id}/addon',[App\Http\Controllers\AddonController::class, 'index'])->where('v_id', '[0-9]+');
+	Route::get('/chef/{v_id}/addon/create',[App\Http\Controllers\AddonController::class, 'create'])->where('v_id', '[0-9]+');
+	Route::post('/chef/{v_id}/addon/store',[App\Http\Controllers\AddonController::class, 'update'])->where('v_id', '[0-9]+');
+	Route::get('/chef/{v_id}/addon/edit/{id}',[App\Http\Controllers\AddonController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
+	Route::get('/chef/{v_id}/unit',[App\Http\Controllers\AddonController::class, 'index'])->where('v_id', '[0-9]+');
+	Route::get('/chef/{v_id}/unit/create',[App\Http\Controllers\AddonController::class, 'create'])->where('v_id', '[0-9]+');
+	Route::post('/chef/{v_id}/unit/store',[App\Http\Controllers\AddonController::class, 'update'])->where('v_id', '[0-9]+');
+	Route::get('/chef/{v_id}/unit/edit/{id}',[App\Http\Controllers\AddonController::class, 'edit'])->where('v_id', '[0-9]+')->where('id', '[0-9]+');
+	Route::get('/chef/{v_id}/menu_item',[App\Http\Controllers\MenuitemController::class, 'index'])->where('v_id', '[0-9]+');
+	Route::get('/chef/{v_id}/menu_item/create',[App\Http\Controllers\MenuitemController::class, 'create'])->where('v_id', '[0-9]+');
+	Route::post('/chef/{v_id}/menu_item/store',[App\Http\Controllers\MenuitemController::class, 'update'])->where('v_id', '[0-9]+');
+	Route::get('/chef/{v_id}/menu_item/edit/{id}',[App\Http\Controllers\MenuitemController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
+	Route::get('/chef/{v_id}/user_documents',[App\Http\Controllers\UserdocumentController::class, 'index'])->where('v_id', '[0-9]+');
+	Route::post('/chef/{v_id}/user_documents/store',[App\Http\Controllers\UserdocumentController::class, 'update'])->where('v_id', '[0-9]+');
+	Route::post('/schedule',[App\Http\Controllers\ChefController::class, 'schedule']);
+	Route::post('/availability',[App\Http\Controllers\ChefController::class, 'availability']);
+	Route::resource('offtimelog', App\Http\Controllers\OfftimelogController::class);
+	Route::get('orderearexport/{slug}', [App\Http\Controllers\EarningController::class, 'orderearexport']);
+	Route::get('itemexport/{slug}', [App\Http\Controllers\EarningController::class, 'itemexport']);
+	Route::get('reviewexport/{slug}', [App\Http\Controllers\ReviewController::class, 'reviewexport']);
+	Route::get('commentexport/{slug}', [App\Http\Controllers\CommentController::class, 'commentexport']);
+	Route::get('vendororderexport/{slug}', [App\Http\Controllers\OrderController::class, 'vendororderexport']);
+	Route::get('payoutexport', [App\Http\Controllers\PayoutController::class, 'payoutexport']);
+	Route::get('restaurants/{v_id}/menuitemexport/{slug}', [App\Http\Controllers\MenuitemController::class, 'menuitemexport']);
+
+	Route::get('restaurants/{v_id}/addonexport/{slug}', [App\Http\Controllers\AddonController::class, 'addonexport']);
+});
