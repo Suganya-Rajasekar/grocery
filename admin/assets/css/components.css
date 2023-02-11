@@ -146,8 +146,8 @@ a.badge,
  *
  * ---------------------------------------------------------------------------- */
  .sidebar {
-  background-color: #fff;
-  color: #0c0707;
+  background-color: #2f4050;
+  color: #fff;
   position: relative;
   width: 260px;
   display: none;
@@ -288,7 +288,7 @@ a.badge,
   margin-top: 10px;
 }
 .navigation li a {
-  color: #0a0808;
+  color: #a7b1c2;
   display: block;
   -webkit-transition: background 0.15s linear, color 0.15s linear;
   -o-transition: background 0.15s linear, color 0.15s linear;
@@ -296,7 +296,7 @@ a.badge,
 }
 .navigation li a:hover,
 .navigation li a:focus {
-  background-color: #ef606f;
+  background-color: #293846;
   color: #fff;
 }
 .navigation li a > i {
@@ -367,7 +367,7 @@ a.badge,
 .navigation > li.active > a,
 .navigation > li.active > a:hover,
 .navigation > li.active > a:focus {
-  background-color: #ef606f;
+  background-color: #293846;
   color: #fff;
 }
 .navigation > li.active > a > [class*=text-] {
@@ -386,7 +386,7 @@ a.badge,
   list-style: none;
   margin: 0;
   padding: 0;
-  background-color: #ef939b2e;
+  background-color: #2f4050;
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -415,7 +415,7 @@ a.badge,
 .navigation > li > ul li.active > a,
 .navigation > li > ul li.active > a:hover,
 .navigation > li > ul li.active > a:focus {
-  background-color: #ef606f;
+  background-color: #293846;
   color: #fff;
 }
 .navigation .navigation-header {
@@ -727,7 +727,7 @@ a.badge,
   .sidebar-category{
     height: calc(100vh - 180px);
     overflow-x: hidden;
-    background: #fff;
+    background: #2f4050;
   }
   .sidebar-category:hover {
     overflow-y: scroll;
@@ -6194,7 +6194,7 @@ legend.alpaca-container-label {
 }
 .daterangepicker td.available:hover,
 .daterangepicker td.available:focus {
-  background-color: #ef606f; 
+  background-color: #293846; 
   color: white;
 }
 .daterangepicker td.off,
@@ -6205,13 +6205,13 @@ legend.alpaca-container-label {
   cursor: not-allowed;
 }
 .daterangepicker td.in-range {
-  background-color: #ef606f5e;
+  background-color: #2938465e;
   color: black;
 }
 .daterangepicker td.active,
 .daterangepicker td.active:hover,
 .daterangepicker td.active:focus {
-  background-color: #EF606F;
+  background-color: #293846;
   color: #fff;
   border-radius: 3px;
 }

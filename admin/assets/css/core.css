@@ -6754,9 +6754,9 @@ a.list-group-item-danger:focus {
   background-image:-webkit-gradient(linear,
                      left bottom,
                      left top,
-                     color-stop(0.44, #ef606f),
-                     color-stop(0.72, #f17c87),
-                     color-stop(0.86, #ef606f))
+                     color-stop(0.44, #55b3a7),
+                     color-stop(0.72, #55b3a7),
+                     color-stop(0.86, #55b3a7))
 }
 .dashboard-asw .panel{
   box-shadow: 0 0px 9px 6px #b9b9b940;

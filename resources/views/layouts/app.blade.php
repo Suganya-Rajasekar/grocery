@@ -2,13 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{ config('app.name') }}</title>
+    <title>{!! config('app.name') !!}</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-
     <!-- Bootstrap 3.3.7 -->
     {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"> --}}
-
     <link href="{!! asset('assets/plugins/bootstrap/css/bootstrap.css') !!}" rel="stylesheet"/>
     <link href="{!! asset('assets/plugins/bootstrap/css/bootstrap-grid.css') !!}" rel="stylesheet"/>
     <link href="{!! asset('assets/plugins/bootstrap/css/bootstrap-reboot.css') !!}" rel="stylesheet"/>

@@ -10,14 +10,14 @@ class HomeController extends Controller
 	public function homepage(Request $request)
 	{
 		$banner = Banner::active()->get();
-		$response['banner']	= $banner;
 		$shop_category = Category::select('id','name','res_id','avatar')->where('res_id','0')->get();
-		$response['shop_by_category'] = $shop_category;
-		$category = Category::select('id','name','res_id','avatar','p_id')->where('res_id','0')->where('visibility_mode','on')->where('p_id','0')->get()->map(function ($result) {
+		$category = Category::select('id','name','res_id','avatar','p_id')/*->where('res_id','0')*/->where('visibility_mode','on')->where('p_id','0')->get()->map(function ($result) {
             $result->append('subcategory');
             return $result;
             });
-		$response['category'] = $category;
+		$response['banner']				= $banner;
+		$response['category']			= $category;
+		$response['shop_by_category']	= $shop_category;
 		return \Response::json($response,200);
 	}
 }

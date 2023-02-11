@@ -9,7 +9,7 @@
 	})(window,document,'script','dataLayer','GTM-N2QNG6Q');</script>
 	<!-- End Google Tag Manager -->
 	<meta charset="UTF-8">
-	<title>{!! CNF_APPNAME !!}</title>
+	<title>{!! config('app.name') !!}</title>
 	<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 	<link rel="shortcut icon" type="image/x-icon" href="{!! asset('assets/front/img/favicon.ico') !!}" />
 	<meta name="csrf-token" content="{{ csrf_token() }}">
@@ -33,16 +33,7 @@
 	<link rel="apple-touch-icon" href="{!! asset('assets/front/img/favicon.ico') !!}">
 	<link rel="manifest" href="{{ asset('/manifest.json') }}">
 	<link rel="mask-icon" href="{!! asset('assets/front/img/favicon.ico') !!}" color="#008046">
-	<meta name="apple-mobile-web-app-title" content="Knosh">
-
-
-	<!--<script type="module">
-		import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
-		const el = document.createElement('pwa-update');
-		document.body.appendChild(el);
-	</script>-->
-
-
+	<meta name="apple-mobile-web-app-title" content="{!! config('app.name') !!}">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
@@ -104,111 +95,8 @@
 			z-index: 9999;
 		}
 	</style>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	{{-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-0WT11DHGX3"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-
-		gtag('config', 'G-0WT11DHGX3');
-		gtag('config', 'AW-10852518099');
-	</script> --}}
-
-	<!-- Global site tag (gtag.js) - Google Ads: 10927186882 -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-10927186882"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-
-		gtag('config', 'AW-10927186882');
-	</script>
-	<!-- Facebook Pixel Code -->
-	<script>
-		!function(f,b,e,v,n,t,s) {
-			if(f.fbq)return;n=f.fbq=function() {
-				n.callMethod?
-				n.callMethod.apply(n,arguments):n.queue.push(arguments)
-			};
-			if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-			n.queue=[];t=b.createElement(e);t.async=!0;
-			t.src=v;s=b.getElementsByTagName(e)[0];
-			s.parentNode.insertBefore(t,s)
-		}(window,document,'script', 'https://connect.facebook.net/en_US/fbevents.js');
-		fbq('init', '598402541821469'); 
-		fbq('track', 'PageView');
-	</script>
-	<noscript>
-		<img height="1" width="1" 
-		src="https://www.facebook.com/tr?id=598402541821469&ev=PageView
-		&noscript=1"/>
-	</noscript>
-	<!-- End Facebook Pixel Code -->
 </head>
 <body>
-	@if(\Request::segment(1) == 'checkout')
-	<!-- Event snippet for SW | Begin checkout conversion page -->
-	<script>
-		gtag('event', 'conversion', {
-			'send_to': 'AW-10927186882/78YzCJTzjMMDEMLHvtoo',
-			'value': 1.0,
-			'currency': 'INR'
-		});
-	</script>
-	@endif
-	@if(\Request::segment(1) == 'chef')
-	<!-- Event snippet for SW | Add to cart conversion page -->
-	<script>
-		gtag('event', 'conversion', {
-			'send_to': 'AW-10927186882/3fHWCJHzjMMDEMLHvtoo',
-			'value': 1.0,
-			'currency': 'INR'
-		});
-	</script>
-
-	@endif
-	@if(\Request::segment(1) == 'thankyou')
-		<!-- Event snippet for Orders - Website conversion page -->
-		{{-- <script>
-			gtag('event', 'conversion', {
-				'send_to': 'AW-10852518099/e90XCPz35qcDENOR8bYo',
-				'transaction_id': ''
-			});
-		</script> --}}
-		<!-- Event snippet for SW | Purchase conversion page -->
-		<script>
-			gtag('event', 'conversion', {
-				'send_to': 'AW-10927186882/pD90CJfzjMMDEMLHvtoo',
-				'value': 1.0,
-				'currency': 'INR',
-				'transaction_id': ''
-			});
-		</script>
-	@endif
-	@if(\Request::segment(1) == "register" || \Request::segment(2) == "register")
-		<!-- Event snippet for Register - Website conversion page
-		In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
-		{{-- <script>
-			function gtag_report_conversion(url) {
-			  var callback = function () {
-				if (typeof(url) != 'undefined') {
-				  window.location = url;
-			  }
-		  };
-		  gtag('event', 'conversion', {
-			  'send_to': 'AW-10852518099/aQAfCKnDnKgDENOR8bYo',
-			  'event_callback': callback
-		  });
-		  return false;
-		}
-		</script> --}}
-	@endif
-	<!-- Google Tag Manager (noscript) -->
-	{{-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N2QNG6Q"
-		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> --}}
-	<!-- End Google Tag Manager (noscript) -->
-	<!-- <div class="loader" id="loading"></div> -->
 	<div class="ajaxLoading" id="ajaxLoading"></div>
 	<div class="overlay" id="overlay"></div>
 	{{-- <div id="preloader" ></div> --}}
@@ -737,12 +625,12 @@
 					}
 				})
 				$('.celebrity-chef').owlCarousel({
-				    loop:false,
-				    dots: false,
-				    nav: false,
-				    margin:10,
-				    merge:true,
-				    responsive:{
+					loop:false,
+					dots: false,
+					nav: false,
+					margin:10,
+					merge:true,
+					responsive:{
 						0:{
 							items:6
 						},
@@ -755,7 +643,7 @@
 						1400:{
 							items:11
 						}
-				    }
+					}
 				})
 				$('.see-more').owlCarousel({
 					loop:false,
@@ -826,21 +714,21 @@
 			}
 		});
 		$('.popup_imgcarousel').owlCarousel({
-		    loop:true,
-		    margin:10,
-		    nav:true,
-		    dots:false,
-		    responsive:{
-		        0:{
-		            items:1
-		        },
-		        600:{
-		            items:1
-		        },
-		        1000:{
-		            items:1
-		        }
-		    }
+			loop:true,
+			margin:10,
+			nav:true,
+			dots:false,
+			responsive:{
+				0:{
+					items:1
+				},
+				600:{
+					items:1
+				},
+				1000:{
+					items:1
+				}
+			}
 		});
 		$('.owl-cuisine-old').owlCarousel({
 			loop:false,
@@ -1943,23 +1831,18 @@
 
 	{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
 	<link defer rel="stylesheet" type="text/css" href="{{asset("assets/front/css/polygon.css")}}">
-	<!-- chat bot  -->
-	@if ( (isset($source) && $source != 'api') || (empty($source))) 
-	@include('chat.main')
-	@endif
-	<!--   chat bot  -->
-    <!--Start of Tawk.to Script-->
-    {{-- <script type="text/javascript">
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        (function(){
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true;
-            s1.src='https://embed.tawk.to/629ee5967b967b1179933d6b/1g4ub1lui';
-            s1.charset='UTF-8';
-            s1.setAttribute('crossorigin','*');
-            s0.parentNode.insertBefore(s1,s0);
-        })();
-    </script> --}}
-    <!--End of Tawk.to Script-->
+	<!--Start of Tawk.to Script-->
+	<script type="text/javascript">
+		var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+		(function(){
+			var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+			s1.async=true;
+			s1.src='https://embed.tawk.to/629ee5967b967b1179933d6b/1g4ub1lui';
+			s1.charset='UTF-8';
+			s1.setAttribute('crossorigin','*');
+			s0.parentNode.insertBefore(s1,s0);
+		})();
+	</script>
+	<!--End of Tawk.to Script-->
 </body>
 </html>

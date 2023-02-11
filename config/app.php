@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Eduards'),
+    'name' => env('APP_NAME', 'Grocery'),
 
     /*
     |--------------------------------------------------------------------------
@@ -179,7 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Anam\PhantomMagick\ConverterServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
+        // Intervention\Image\ImageServiceProvider::class,
         // SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
     ],
 

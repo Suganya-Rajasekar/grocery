@@ -1,6 +1,6 @@
   <!-- Main navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#"><img style="width: 85px;" src="{!!asset('assets/front/img/logo.svg')!!}">
+    <a class="navbar-brand" href="#"><img style="width: 85px;" src="{!!asset('assets/front/img/logo.png')!!}">
     </a>
     <div class="d-flex mr-auto">
         {{-- <a class="nav-link" data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a> --}}
@@ -26,7 +26,7 @@
     $notification = App\Models\Notification::with('from_user_info')->where('is_read','=','0');
     $notfy  = clone ($notification); $notcnt = clone ($notification);
     $notfy  = $notfy->limit(5)->get();
-    $notcnt = $notcnt->count();
+    $notcnt = $notcnt->count(); 
     ?>
         <!-- <nav class="chefdet">
             <ul>
@@ -67,7 +67,7 @@
     <ul class="navbar-nav message-asw w-lg-100">
         <li class="nav-item dropdown ml-auto mr-3">
             <a href="{!! \URL::to(getRoleName().'/notification') !!}" @if($notcnt > 0) data-toggle="dropdown" @endif id="message" class="p-0 nav-link">
-                <i class="fa fa-bell"></i>
+                <i class="fa fa-bell-o"></i>
                 <span>{!! $notcnt !!}</span>
             </a>
             @if($notcnt > 0)
