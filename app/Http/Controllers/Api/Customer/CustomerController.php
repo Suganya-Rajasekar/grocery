@@ -81,7 +81,6 @@ class CustomerController extends Controller
 		if (isset($request->explore) && $request->explore != '') {
 			$response['exploreseemore'] = $this->exploreseemore();
 			return \Response::json($response,200);
-
 		}
 
 		$select	= ['id','name','cuisine_type','avatar','budget'];
@@ -161,15 +160,6 @@ class CustomerController extends Controller
 					$aKey	= self::Homepagemap($aKey/*->inRandomOrder()*/->popular()->orderBy('ordering')->paginate(20, ['*'], 'page', $pageNumber),$promoted);
 				} elseif ($aArray == 'popularNearYou') {
 					$arrFood	= $popular = [];
-					if (!empty($Chefs)) {
-						$items		= Orderdetail::select(\DB::raw('DISTINCT(JSON_UNQUOTE(JSON_EXTRACT(food_items, "$[*].id"))) as fids'))->where('status', 'completed')->whereIn('vendor_id', $Chefs)/*->inRandomOrder()*/->get()->map(function ($res) use (&$arrFood) {
-							$arrFood= array_unique(array_merge($arrFood, json_decode($res->fids)));
-						});
-						if (!empty($arrFood)) {
-							$popular = Menuitems::select(['id','name','description','price','image','main_category','vendor_id','unit','preparation_time'])->approved()/*->instock()*/->whereIn('id',$arrFood)->paginate(10);
-							$popular->append('category_name')->makeHidden(['unit','unit_detail','preparation_time','preparation_time_text']);
-						}
-					}
 					$aKey	= $popular;
 				}
 				$response[$aArray]	= (count($aKey) > 0) ? $aKey : (object) [];
