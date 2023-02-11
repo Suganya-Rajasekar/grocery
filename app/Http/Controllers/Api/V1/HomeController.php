@@ -20,6 +20,25 @@ class HomeController extends Controller
 		$response['shop_by_category']	= $shop_category;
 		return \Response::json($response,200);
 	}
+
+	public function categoryList(Request $request)
+	{
+		$pageNumber = isset($request->pageNumber) ? $request->pageNumber: 1;
+		$cat = Category::get()->append('subcategory')->paginate(5, ['*'], 'page', $pageNumber);
+		$response['categoryList'] = $cat;
+		return \Response::json($response,200);
+	}
+
+	public function category(Request $request)
+	{
+		$cat = Category::select('*');
+		if (isset($request->cat_id)) {
+			$cat = $cat->where('id',$request->cat_id);
+		}
+		$cat = $cat->get()->append('subcategory');
+		$response['categoryList'] = $cat;
+		return \Response::json($response,200);	
+	}
 }
 
 ?>

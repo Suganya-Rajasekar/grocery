@@ -117,6 +117,8 @@ Route::group(['middleware'=>'api','prefix'=>'api'/*,'middleware'=>'authcheck'*/]
 	Route::get('webview/{page}',[CustomerController::class, 'webview']);
 	Route::get('homepage',[CustomerController::class, 'homepage']);
 	Route::get('home',[HomeController::class, 'homepage']);
+	Route::get('categoryList',[HomeController::class, 'categoryList']);
+	Route::get('category',[HomeController::class, 'category']);
 	Route::get('populardishes',[CustomerController::class, 'popularDishes']);
 	Route::get('chefinfo',[CustomerController::class, 'chefinfo']);
 	Route::get('chefinfonew',[CustomerController::class, 'chefinfonew']);
