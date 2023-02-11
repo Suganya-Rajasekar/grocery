@@ -32,7 +32,7 @@ class Chefs extends Model
         'name','profile_name', 'email', 'password','role','location_id', 'mobile', 'cuisine_type','status','user_code','type','individual_email_1','individual_email_2'
     ];
 
-    public $appends = ['cuisines','reviewscount','ratings','avatar','avalability','is_bookmarked','documentverify','chef_description'/*,'available_offer_text_arr'*/,'socket_subscribe_name','socket_room_name','room','is_notify','event_location','event_time'];
+    public $appends = ['cuisines','reviewscount','ratings','avatar','is_bookmarked','documentverify','chef_description'/*,'available_offer_text_arr'*/,'socket_subscribe_name','socket_room_name','room','is_notify','event_location','event_time'];
 
     /**
      * The attributes that should be casted to native types.

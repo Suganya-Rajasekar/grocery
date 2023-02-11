@@ -168,11 +168,11 @@ class CustomerController extends Controller
 		}
 		if (!isset($request->seemore) && $request->seemore == '' || ($request->from == 'mobile' && $request->seemore == 'foodblock')) {
 			if($request->from != 'mobile' || ($request->from == 'mobile' && $request->seemore == 'foodblock')) {
-				$response['explore']		= self::ExploreData();
-				$response['popularRecipe']	= self::PopularRecipe();
-				$response['blogs']			= self::Blogs();
-				$response['whatsTrending']	= self::whatsTrending();
-				$response['sectionTitles']	= self::HomepageContent();
+				$response['explore']		= [];
+				$response['popularRecipe']	= [];
+				$response['blogs']			= [];
+				$response['whatsTrending']	= [];
+				$response['sectionTitles']	= [];
 			}
 		}
 
@@ -190,15 +190,15 @@ class CustomerController extends Controller
 			$response['homeevent']  =  self::Homepagemap($chefs->orderBy('ordering')->paginate($record_count, ['*'], 'page', $pageNumber),'','homeevent');
 		}
 		if($request->ajax() && $request->seemore == '') {
-			$response['popularRecipe']	= self::PopularRecipe();
-			$response['blogs']			= self::Blogs();
-			$response['whatsTrending']	= self::whatsTrending();
-			$response['sectionTitles']	= self::HomepageContent();
+			$response['popularRecipe']	= [];
+			$response['blogs']			= [];
+			$response['whatsTrending']	= [];
+			$response['sectionTitles']	= [];
 		}
-		$response['exploreseemore'] = $this->exploreseemore();
-		$response['explorecuisines'] = self::ExploreCuisinesData();
-		$response['banner']			= self::Banner();
-		$response['reels']          = self::Reels($perPage,$pageNumber);
+		$response['exploreseemore'] = [];
+		$response['explorecuisines'] = [];
+		$response['banner']			= [];
+		$response['reels']          = [];
 		return \Response::json($response,200);
 	}
 
