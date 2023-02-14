@@ -30,16 +30,18 @@ class HomeController extends Controller
 		return \Response::json($response,200);
 	}
 
-	public function search(Request $request)
+	public function searchProducts(Request $request)
 	{
 		$items = Menuitems::select('*')->where('restaurant_id','0');
-		if (isset($request->cat_id)) {
+		if (isset($request->cat_id) && isset($request->sub_cat_id)) {
+			$items = $items->where('main_category',$request->cat_id)->where('sub_category',$request->sub_cat_id);
+		}elseif (isset($request->cat_id)) {
 			$items = $items->where('main_category',$request->cat_id);
+		}elseif(isset($request->sub_cat_id)){
+			$items = $items->where('sub_category',$request->sub_cat_id);
 		}
-		$cat = Category::where('res_id','0')->get()->append('subcategory');
 		$items = $items->get();
 		$response['menuitems'] = $items;
-		$response['category'] = $cat;
 		return \Response::json($response,200);	
 	}
 }
