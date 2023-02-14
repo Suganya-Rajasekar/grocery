@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Banner;
 use App\Models\Category;
+use App\Models\Menuitems;
 class HomeController extends Controller
 {
 
@@ -29,14 +30,16 @@ class HomeController extends Controller
 		return \Response::json($response,200);
 	}
 
-	public function category(Request $request)
+	public function search(Request $request)
 	{
-		$cat = Category::select('*');
+		$items = Menuitems::select('*')->where('restaurant_id','0');
 		if (isset($request->cat_id)) {
-			$cat = $cat->where('id',$request->cat_id);
+			$items = $items->where('main_category',$request->cat_id);
 		}
-		$cat = $cat->get()->append('subcategory');
-		$response['categoryList'] = $cat;
+		$cat = Category::where('res_id','0')->get()->append('subcategory');
+		$items = $items->get();
+		$response['menuitems'] = $items;
+		$response['category'] = $cat;
 		return \Response::json($response,200);	
 	}
 }
