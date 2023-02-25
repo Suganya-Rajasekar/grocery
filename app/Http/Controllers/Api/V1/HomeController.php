@@ -5,9 +5,9 @@ use Illuminate\Http\Request;
 use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Menuitems;
+
 class HomeController extends Controller
 {
-
 	public function homepage(Request $request)
 	{
 		$banner = Banner::active()->get();

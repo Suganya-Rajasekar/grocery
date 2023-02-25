@@ -49,6 +49,10 @@ class FrontendController extends Controller
 
 	public function index( Request $request)
 	{
+		if (!\Auth::check()) {
+			return \Redirect::to('login') ;
+		}
+
 		$lat	= 9.9239637;
 		$lang	= 78.1222102;
 		if (isset($request->latitude))

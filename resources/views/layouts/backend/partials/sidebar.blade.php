@@ -31,8 +31,9 @@
                     <!-- Main -->
                     {{-- <li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li> --}}
                     @foreach(getSideMenuMain() as $key => $adminmainmenus)                
-                    <?php $role=json_decode($adminmainmenus->role,true);
-                    $viewpermisson = $a_role == 5 ? getUserModuleAccess($adminmainmenus->route,'view') : $role[$a_role]['view'];
+                    <?php
+                    $role   = json_decode($adminmainmenus->role,true);
+                    $viewpermisson  = ($a_role == 5) ? getUserModuleAccess($adminmainmenus->route,'view') : $role[$a_role]['view'];
                     ?>
                     @if(count(getSideMenuSub($adminmainmenus->id))>0)
                     @if($role!='' && $viewpermisson =='1')
@@ -57,8 +58,6 @@
                     @else
                     @if($role!='' && $viewpermisson =='1')
                     <li class=" {{ Request::is($a_role_name.'/'.$adminmainmenus->url) ? 'active' : '' }}">
-
-
                         <a class="nav-link "  href="{{ url($a_role_name.'/'.$adminmainmenus->route) }}">
                             <i class="{{ $adminmainmenus->icon ?? 'fa fa-columns' }}"></i> <span>{{ $adminmainmenus->menu_name }}
                             </span>

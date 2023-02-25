@@ -14,8 +14,8 @@ Route::group(['as' =>'admin.','prefix'=>'admin','middleware'=>['web','auth','Che
 	Route::resource('common', App\Http\Controllers\CommonController::class);
 	Route::put('/common/store',[App\Http\Controllers\CommonController::class, 'update']); 
 	Route::put('/common/{id}/{type}/delete',[App\Http\Controllers\CommonController::class, 'destroy']);
-	Route::resource('category', App\Http\Controllers\CategoryController::class);
-	Route::put('/category/{id}/delete',[App\Http\Controllers\CategoryController::class, 'destroy']);
+	// Route::resource('category', App\Http\Controllers\CategoryController::class);
+	// Route::put('/category/{id}/delete',[App\Http\Controllers\CategoryController::class, 'destroy']);
 	Route::resource('blog_category', App\Http\Controllers\BlogCategoryController::class);
 	Route::put('/blog_category/{id}/delete',[App\Http\Controllers\BlogCategoryController::class, 'destroy']);
 	Route::resource('chef', App\Http\Controllers\ChefController::class);
@@ -111,21 +111,30 @@ Route::group(['as' =>'admin.','prefix'=>'admin','middleware'=>['web','auth','Che
 	Route::get('/chef/{v_id}/addon/create',[App\Http\Controllers\AddonController::class, 'create'])->where('v_id', '[0-9]+');
 	Route::post('/chef/{v_id}/addon/store',[App\Http\Controllers\AddonController::class, 'update'])->where('v_id', '[0-9]+');
 	Route::get('/chef/{v_id}/addon/edit/{id}',[App\Http\Controllers\AddonController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
+	
 	Route::get('/chef/{v_id}/unit',[App\Http\Controllers\AddonController::class, 'index'])->where('v_id', '[0-9]+');
 	Route::get('/chef/{v_id}/unit/create',[App\Http\Controllers\AddonController::class, 'create'])->where('v_id', '[0-9]+');
 	Route::post('/chef/{v_id}/unit/store',[App\Http\Controllers\AddonController::class, 'update'])->where('v_id', '[0-9]+');
 	Route::get('/chef/{v_id}/unit/edit/{id}',[App\Http\Controllers\AddonController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
+	
 	Route::get('/chef/{v_id}/category',[App\Http\Controllers\CategoryController::class, 'index'])->where('v_id', '[0-9]+');
 	Route::get('/chef/{v_id}/category/create',[App\Http\Controllers\CategoryController::class, 'create'])->where('v_id', '[0-9]+');
 	Route::post('/chef/{v_id}/category/store',[App\Http\Controllers\CategoryController::class, 'update'])->where('v_id', '[0-9]+');
 	Route::get('/chef/{v_id}/category/edit/{id}',[App\Http\Controllers\CategoryController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
 
+	Route::post('fundaccount',[App\Http\Controllers\ChefController::class, 'fundaccount'])->name('fundaccount');
+
 	Route::get('/unit',[App\Http\Controllers\AddonController::class, 'unit_index']);
 	Route::get('/unit/create',[App\Http\Controllers\AddonController::class, 'unit_create']);
 	Route::post('/unit/store',[App\Http\Controllers\AddonController::class, 'unit_update']);
-	Route::post('fundaccount',[App\Http\Controllers\ChefController::class, 'fundaccount'])->name('fundaccount');
 	Route::get('/unit/edit/{id}',[App\Http\Controllers\AddonController::class, 'unit_edit'])->where('id', '[0-9]+');
 	Route::put('/unit/{id}/delete',[App\Http\Controllers\AddonController::class, 'destroy']);
+
+	Route::get('/category',[App\Http\Controllers\CategoryController::class, 'index']);
+	Route::get('/category/create',[App\Http\Controllers\CategoryController::class, 'create']);
+	Route::post('/category/store',[App\Http\Controllers\CategoryController::class, 'update']);
+	Route::get('/category/edit/{id}',[App\Http\Controllers\CategoryController::class, 'edit'])->where('id', '[0-9]+');
+	Route::put('/category/{id}/delete',[App\Http\Controllers\AddonController::class, 'destroy']);
 
 	Route::post('/location_code',  [App\Http\Controllers\ChefController::class, 'locationCode']);
 	Route::get('/notification',[App\Http\Controllers\NotificationController::class, 'index']);

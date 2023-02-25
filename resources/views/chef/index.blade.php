@@ -48,9 +48,9 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-2">
+	{{-- <div class="col-md-2">
 		<a href="{!!route('admin.chef_ordering')!!}"><button type="button" class="btn bg-blue-400 btn-labeled"><b><i class="fas fa-sort"></i></b> {{ ('Sort Chefs') }}</button></a>
-	</div>
+	</div> --}}
 	@endif
 </div>
 <div class="panel panel-flat">
@@ -221,20 +221,9 @@
 								<ul class="dropdown-menu dropdown-menu-right">
 									@if($chefreq == false && $access->edit)
 									<li><a href="{!!url(getRoleName().'/chef/'.$value->id.'/edit_business'.$url)!!}" data-placement="left" data-toggle="tooltip" title="Click to update business profile"><button type="button" class="btn bg-success-400 btn-sm" >Business Info</button></a></li>
-									@if($value->type != 'event')
 									<li><a href="{!!url(getRoleName().'/chef/'.$value->id.'/addon'.$url)!!}" data-placement="left" data-toggle="tooltip" title="Click to add/edit addons"><button type="button" class="btn bg-primary-400 btn-sm" >Addons</button></a></li>
-									@endif
-									<li><a href="{!!url(getRoleName().'/chef/'.$value->id.'/menu_item'.$url)!!}" data-placement="left" data-toggle="tooltip" title="Click to add/edit Menu Item's"><button type="button" class="btn bg-info-400 btn-sm" >@if($value->type == 'event') Tickets @elseif($value->home_event == 'yes') Home event menu @else Menu items @endif</button></a></li>
-									{{-- @if($value->type != 'event' && $value->getChefRestaurant->preparation_time == 'ondemand')
-									<li><a href="javascript:void(0)" class="preparation_time" data-vid="{{ $value->id }}" data-placement="left" title="Click to edit Menu Item's preparation time"><button type="button" class="btn bg-info-400 btn-sm">Preparation time change</button></a></li>
-									@endif
-									@if($value->type != 'event')
-									<li><a href="{!!url(getRoleName().'/chef/'.$value->id.'/user_documents'.$url)!!}" data-placement="left" data-toggle="tooltip" title="Click to add/edit document"><button type="button" class="btn bg-warning-400 btn-sm" >User Documents</button></a></li>
-									<li><a href="{!!url(getRoleName().'/chef/'.$value->id.'/menu_item/rearrange/'.$url)!!}" data-placement="left" data-toggle="tooltip" title="Click to add/edit Menu Item's"><button type="button" class="btn bg-info-400 btn-sm" >Category ordering</button></a></li>
-									@endif
-									@if($value->type == "chef")
-									<li><a href="{!!url(getRoleName().'/chef/'.$value->id.'/user_documents'.$url)!!}" data-placement="left" data-toggle="tooltip" title="Click to add reels"><button type="button" class="btn bg-primary-400 btn-sm" >Reels</button></a></li>
-									@endif --}}
+									<li><a href="{!!url(getRoleName().'/chef/'.$value->id.'/store'.$url)!!}" data-placement="left" data-toggle="tooltip" title="Click to add/edit stores"><button type="button" class="btn bg-warning-400 btn-sm" >Stores</button></a></li>
+									<li><a href="{!!url(getRoleName().'/chef/'.$value->id.'/menu_item'.$url)!!}" data-placement="left" data-toggle="tooltip" title="Click to add/edit Menu Item's"><button type="button" class="btn bg-info-400 btn-sm" >Menu items</button></a></li>
 									@endif
 									<li>
 										@if($access->remove)

@@ -19,6 +19,8 @@ class Controller extends BaseController
 	{
 		$this->method		= \Request::method();
 		$this->segment		= \Request::segment(1);
+		$this->restaurant	= \Request::segment(3);
+		// print_r($this->restaurant);exit;
 		$this->paginate		= 10;
 		$this->sub_paginate	= 10;
 		$from	= (!is_null($this->segment) && $this->segment == 'api') ? 'mobile' : 'web';

@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\Emperica\CartController;
+use App\Http\Controllers\Api\V1\HomeController;
+use App\Http\Middleware\IdentifyRestaurant;
 
 
 /*
@@ -16,8 +17,9 @@ use App\Http\Controllers\Api\V1\Emperica\CartController;
 |
 */
 
-Route::group(['middleware'=>'api'/*,'middleware'=>'authcheck'*/],function() { 
-	Route::any('cart',[CartController::class, 'addCart']);
-	Route::DELETE('delcart',[CartController::class, 'delCart']);
+Route::group(['middleware'=>'api', 'prefix'=>'{res_name}'/*,'middleware'=>\App\Http\Middleware\IdentifyRestaurant::class*/],function() {
+	Route::get('home',[HomeController::class, 'homepage']);
+	Route::get('categoryList',[HomeController::class, 'categoryList']);
+	Route::get('searchProducts',[HomeController::class, 'searchProducts']);
 });
 

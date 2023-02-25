@@ -14,9 +14,7 @@ $pages=[];
 			</ul>
 		</div>
 	</div>
-
 	<table class="table datatable-responsive">
-		
 		<thead>
 			<tr>
 				<th>#</th>
@@ -28,7 +26,6 @@ $pages=[];
 			</tr>
 		</thead>
 		<tbody>
-
 			@if(count($category)>0)
 			@foreach($category as $key=>$value)
 			<tr>
@@ -53,18 +50,13 @@ $pages=[];
 			</tr>
 			@endforeach
 			@endif
-
 		</tbody>
-
 	</table>
 </div>
 <!-- /basic responsive configuration -->
-
 @endsection
 @section('script')
 <script type="text/javascript">
-	"use strict";	
-	
-	
+	"use strict";
 </script>
 @endsection

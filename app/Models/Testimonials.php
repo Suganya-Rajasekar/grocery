@@ -17,67 +17,65 @@ use App\Models\Language;
  */
 class Testimonials extends Model
 {
-    use SoftDeletes;
+	use SoftDeletes;
 
-    public $table = 'tbl_testimonials';
-    
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-    const IMAGE_PATH = '/assets/front/img/testimonials/';
-
-
-    protected $dates = ['deleted_at'];
+	public $table = 'tbl_testimonials';
+	
+	const CREATED_AT = 'created_at';
+	const UPDATED_AT = 'updated_at';
+	const IMAGE_PATH = '/assets/front/img/testimonials/';
 
 
-
-    public $fillable = [
-        'name',
-        'image',
-        'description',
-        'created_dt'
-    ];
-
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'id' => 'integer',
-        'name' => 'string',
-        'image' => 'string',
-        'description' => 'string',
-        'created_dt' => 'datetime'
-    ];
-
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'name' => 'required|string|max:70',
-        'description' => 'required|string',
-        'image' => 'required',
-        // 'created_dt' => 'required',
-        'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
-    ];
-
-    public function getImageSrcAttribute()
-    {
-        return ValidateImage($this::IMAGE_PATH , $this->image);
-    }
+	protected $dates = ['deleted_at'];
 
 
-    public function getNameAttribute()
-    {
-        return getTranslated('testimonials', 'name', $this->id , $this->attributes['name']);
-    }
 
-    public function getDescriptionAttribute()
-    {
-        return getTranslated('testimonials', 'description', $this->id , $this->attributes['description']);
-    }
+	public $fillable = [
+		'name',
+		'image',
+		'description',
+		'created_dt'
+	];
 
+	/**
+	 * The attributes that should be casted to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'id' => 'integer',
+		'name' => 'string',
+		'image' => 'string',
+		'description' => 'string',
+		'created_dt' => 'datetime'
+	];
+
+	/**
+	 * Validation rules
+	 *
+	 * @var array
+	 */
+	public static $rules = [
+		'name' => 'required|string|max:70',
+		'description' => 'required|string',
+		'image' => 'required',
+		// 'created_dt' => 'required',
+		'updated_at' => 'nullable',
+		'deleted_at' => 'nullable'
+	];
+
+	public function getImageSrcAttribute()
+	{
+		return ValidateImage($this::IMAGE_PATH , $this->image);
+	}
+
+	public function getNameAttribute()
+	{
+		return getTranslated('testimonials', 'name', $this->id , $this->attributes['name']);
+	}
+
+	public function getDescriptionAttribute()
+	{
+		return getTranslated('testimonials', 'description', $this->id , $this->attributes['description']);
+	}
 }

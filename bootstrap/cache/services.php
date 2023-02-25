@@ -45,7 +45,6 @@
     41 => 'App\\Providers\\RouteServiceProvider',
     42 => 'Barryvdh\\DomPDF\\ServiceProvider',
     43 => 'Anam\\PhantomMagick\\ConverterServiceProvider',
-    44 => 'Intervention\\Image\\ImageServiceProvider',
   ),
   'eager' => 
   array (
@@ -78,7 +77,6 @@
     26 => 'App\\Providers\\RouteServiceProvider',
     27 => 'Barryvdh\\DomPDF\\ServiceProvider',
     28 => 'Anam\\PhantomMagick\\ConverterServiceProvider',
-    29 => 'Intervention\\Image\\ImageServiceProvider',
   ),
   'deferred' => 
   array (

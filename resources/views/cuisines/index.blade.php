@@ -4,14 +4,14 @@
 <div class="page-header page-header-default">
 	<div class="page-header-content">
 		<div class="page-title">
-			<h5><span class="text-semibold">Master</span> - Cuisines</h5>
+			<h5><span class="text-semibold">Master</span> - Store categories</h5>
 		</div>
 	</div>
 
 	<div class="breadcrumb-line">
 		<ul class="breadcrumb">
 			<li><a href="{!! url(getRoleName().'/dashboard') !!}"><i class="icon-home2 position-left"></i>Dashboard</a></li>
-			<li>Cuisines</li>
+			<li>Store categories</li>
 		</ul>
 	</div>
 </div>
@@ -28,49 +28,53 @@ $search = request()->has('search') ? request()->get('search') : '';
 $from	= request()->has('from') ? request()->get('from') : '';
 $url	= '?from='.$from.'&page='.$cpage.'&status='.$status.'&search='.$search;
 $dwnload= ['pdf'=>'PDF','xls'=>'EXCEL','csv'=>'CSV'];
+$dwnicon= ['pdf'=>'pdf','xls'=>'excel','csv'=>'csv'];
 @endphp
 <!-- Basic responsive configuration -->
 <div class="panel panel-flat">
 	<div class="panel-body">
 		<div class="pull-left">
-			@if($access->edit)
-			<div class="panel-heading">
-				<a href="{!!url(getRoleName().'/cuisines/create')!!}"><button type="button" class="btn bg-teal-400 btn-labeled btn-rounded"><b><i class="icon-pie-chart3"></i></b> {{ ('Add New') }}</button></a>
+			<div class="row">
+				@if($access->edit)
+				<div class="form-group mb-2 ml-2">
+					<a href="{!!url(getRoleName().'/cuisines/create')!!}"><button type="button" class="btn bg-teal-400 btn-labeled btn-rounded"><b><i class="icon-pie-chart3"></i></b> {{ ('Add New') }}</button></a>
+				</div>
+				@endif
+				<div class="form-group mb-2 ml-2">
+					<div class="btn-group position-static">
+						<button type="button" class="btn bg-transparent text-primary border-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="icon-download"></i> Download</button>
+						<div class="dropdown-menu dropdown-menu-right" style="">
+							@php $i =0; @endphp
+							@foreach($dwnload as $dn => $dv)
+							@if($i != 0)
+							<div class="dropdown-divider"></div>
+							@endif
+							<a href="{!! url(getRoleName().'/cuisineexport/'.$dn.'?user_id='.\Request::query('user_id').'&food_id='.\Request::query('food_id').'&date='.\Request::query('date').'&search='.\Request::query('search').'&status='.\Request::query('status')) !!}" class="dropdown-item"><i class="fas fa-file-{!! $dwnicon[$dn] !!}"></i> {!! $dv !!}</a>
+							@php $i++; @endphp
+							@endforeach
+						</div>
+					</div>
+				</div>
 			</div>
-			@endif
-
 		</div>
 		<div class="pull-right">
-		<form class="form-inline" method="GET" >
+			<form class="form-inline" method="GET" >
 				<div class="form-group mb-2">
-					<div class="dropdown">	
-				<button class="btn bg-teal-400  btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<b><i class="icon-download"></i></b> Download </button>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						@foreach($dwnload as $dn => $dv)
-						<a class="dropdown-item" href="{!! url(getRoleName().'/cuisineexport/'.$dn.'?user_id='.\Request::query('user_id').'&food_id='.\Request::query('food_id').'&date='.\Request::query('date').'&search='.\Request::query('search').'&status='.\Request::query('status')) !!}">{!! $dv !!}</a>
-						@endforeach
-					</div>
-					</div>
-				<div class="form-group mb-10">
+					<input type="text" class="form-control" name="search" placeholder="Search name or desc" value="{!! \Request::query('search') !!}">
+				</div>
+				<div class="form-group mb-10 ml-2">
 					<select name="status" class="select-search form-control">
 						<option value="">All Status</option>
 						<option value="active" @if(\Request::query('status') == 'active') selected @endif >Active</option> 
 						<option value="inactive" @if(\Request::query('status') == 'inactive') selected @endif>Inactive</option>
 					</select>
 				</div>
-				<div class="form-group mb-2">
-					<input type="text" class="form-control" name="search" placeholder="Search name or all description" value="{!! \Request::query('search') !!}">
-				</div>
 				<button type="submit" class="btn btn-success ml-2 mb-2">Filter</button>
 				@if(\Request::query('status') != '' || \Request::query('search') != '' )
 				<a href="{!! url('admin/common/cuisines') !!}" class="btn btn-danger font-monserret ml-2 mb-2"><i class="icon-cancel-circle2"></i> Clear</a>
 				@endif
 			</form>
-
 		</div>
-		<br><br>
-	</div>
 
 	<div class="table-responsive-xl">
 		<table class="table datatable-responsive table-bordered">
@@ -78,9 +82,10 @@ $dwnload= ['pdf'=>'PDF','xls'=>'EXCEL','csv'=>'CSV'];
 				<tr>
 					<th>S.No</th>
 					<th>Image</th>
-					<th>Cuisine Name</th>
-					<th>Description</th>
-					<th>Explore</th>
+					<th>Name</th>
+					<th>Slug</th>
+					<th>Main Category</th>
+					{{-- <th>Explore</th> --}}
 					<th>Status</th>
 					@if($access->edit || $access->remove )
 					<th class="text-center">Actions</th>
@@ -94,10 +99,12 @@ $dwnload= ['pdf'=>'PDF','xls'=>'EXCEL','csv'=>'CSV'];
 					<td>{!! ($key+1)+$page !!}</td>
 					<td><img src="@if($value->image != ''){!! $value->image !!}@endif" style="width: 40px;height: 40px;max-width: none;" class="img-circle" alt=""></td>
 					<td>{!!$value->name!!}</td>
-					<td>{!! substr($value->description, 0, 50).'...' !!}</td>
-					<td>
+					<td>{!!$value->slug!!}</td>
+					<td>{!!$value->maincat!!}</td>
+					{{-- <td>{!! substr($value->description, 0, 50).'...' !!}</td> --}}
+					{{-- <td>
 						<input type="checkbox" class="styled cuisinecheck" data-id="{{ $value->id }}"name="explore" @if($value->explore == 'yes') checked @endif>
-					</td>
+					</td> --}}
 					<td>
 						@if($value->status=='active')
 						<span class="label label-success">Active</span>
