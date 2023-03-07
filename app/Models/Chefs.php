@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Chefs extends Model
 {
-    use Log,HasFactory, HasEagerLimit;
+    use /*Log,*/HasFactory, HasEagerLimit;
     public $table = 'users';
 
     protected $fillable = [

@@ -379,16 +379,16 @@ function modules_access_names()
 
 function getCommonImageUser()
 {
-	return \URL::to('storage/app/public/avatar.jpg');
+	return \URL::to('storage/app/public/noimage.png');
 }
 
 function getCommonMenuItem()
 {
-	return \URL::to('storage/app/public/food.jpg');
+	return \URL::to('storage/app/public/noimage.png');
 }
 function getCommonBanner()
 {
-	return \URL::to('storage/app/public/banner.jpg');
+	return \URL::to('storage/app/public/noimage.png');
 }
 function uCartQuery($user_id, $cookie)
 {

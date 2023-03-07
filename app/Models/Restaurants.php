@@ -21,7 +21,7 @@ use App\Traits\PushNotification;
  */
 class Restaurants extends Model
 {
-	use Log,Dynamic,PushNotification;
+	use /*Log,*/Dynamic,PushNotification;
 	public $table = 'restaurants';
 	
 	const CREATED_AT = 'created_at';
@@ -151,13 +151,9 @@ class Restaurants extends Model
 		return $event_date_time;
 	}
 
-	public function getChefSectorAttribute() 
+	public function getLocationNameAttribute() 
 	{
-		$chefsector = '';
-		if(!empty($this->attributes['sector']) && !empty($this->attributes['location'])) {
-			$chefsector = $this->attributes['sector'].','.$this->location_info->name;
-		}
-		return $chefsector;
+		return $this->location_info->name;
 	}
 
 	public function getTagsAttribute()
@@ -168,6 +164,16 @@ class Restaurants extends Model
 		return $return;
 	}
 
+    public function getLogoAttribute()
+    {
+        $path   = 'storage/app/public/restaurant/'.$this->attributes['logo'];
+        if ($this->attributes['logo'] != '' && \File::exists(base_path($path))) {
+            $url    = \URL::to($path);
+        } else {
+            $url    = getCommonBanner();
+        }
+        return $url;
+    }
 
 	public function getBudgetNameAttribute()
 	{
