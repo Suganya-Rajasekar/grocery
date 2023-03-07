@@ -127,11 +127,11 @@
 									<legend class="text-semibold">
 										<i class="fa fa- clock-o position-left"></i>
 										Schedule Off days in Advance
-										<a class="control-arrow" data-toggle="collapse" data-target="#demo2">
+										<a class="control-arrow" data-toggle="collapse" data-target="#demo3">
 											<i class="icon-circle-down2"></i>
 										</a>
 									</legend>
-									<div class="collapse in" id="demo2">
+									<div class="collapse in" id="demo3">
 										<div class="input-group align-items-center">
 											<?php 
 											$week   = array('sunday','monday' ,'tuesday','wednesday' ,'thursday' ,'friday' ,'saturday');
