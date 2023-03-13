@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Banner;
 use App\Models\Category;
+use App\Models\Restaurants;
 use App\Models\Menuitems;
 
 class HomeController extends Controller
@@ -11,11 +12,18 @@ class HomeController extends Controller
 	public function homepage(Request $request)
 	{
 		$banner = Banner::active()->get();
-		$shop_category = Category::select('id','name','res_id','avatar')->where('res_id','0')->get();
-		$category = Category::select('id','name','res_id','avatar','p_id')/*->where('res_id','0')*/->where('visibility_mode','on')->where('p_id','0')->get()->map(function ($result) {
-            $result->append('subcategory');
-            return $result;
-            });
+		$res_det = Restaurants::where('id',1)->first();
+		$res_cat = json_decode($res_det->category_list);
+		$shop_category = $res_cat;
+		$id = [];
+		foreach ($res_cat as $key => $value) {
+			$id[] = array_push($id, $value->cate_id);
+		}
+		$list_ids = implode(',', array_unique($id));
+		$category = Category::select('id','name','res_id','avatar','p_id')/*->where('res_id','0')*/->where('visibility_mode','on')->whereIn('id',array($list_ids))->where('p_id','0')->get()->map(function ($result) {
+			$result->append('subcategory');
+			return $result;
+		});
 		$response['banner']				= $banner;
 		$response['category']			= $category;
 		$response['shop_by_category']	= $shop_category;
