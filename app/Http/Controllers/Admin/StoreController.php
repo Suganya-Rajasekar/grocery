@@ -45,7 +45,7 @@ class StoreController extends Controller
 		return view('admin.store.form',compact('id','city','cuisines','chef'));
 	}
 
-	public function edit(Request $request, $s_id)
+	public function edit(Request $request, $id, $s_id)
 	{
 		$id			= $s_id;
 		$city		= Locations::all();
@@ -155,5 +155,72 @@ class StoreController extends Controller
 		$request->all();
 		$exporter = app()->makeWith(ChefExport::class, compact('request'));  
 		return $exporter->download('ChefExport_'.date('Y-m-d').'.'.$slug);
+	}
+
+	public function updateVendorStoreMode(Request $request)
+	{
+		$mode	= $request->mode;
+		$v_id	= $request->v_id;
+		$s_id	= $request->s_id;
+		$result	= app()->call('App\Http\Controllers\Admin\VendorController@vendorData',[
+			'request' => request()->merge(['mode' => $mode, 'v_id' => $v_id, 's_id' => $s_id])
+		]);
+		return $result;
+	}
+
+	public function schedule(Request $request)
+	{
+		$v_id          = $request->v_id;
+		$date_range    = explode(" - ",$request->date_range); 
+		$start_date    = date('Y-m-d',strtotime($date_range[0]));
+		$end_date      = date('Y-m-d',strtotime($date_range[1]));
+		$start_time    = date('H:i:s',strtotime($date_range[0]));
+		$end_time      = date('H:i:s',strtotime($date_range[1]));
+
+		$result = app()->call('App\Http\Controllers\Api\Partner\PartnerController@schedule',[
+			'request' => request()->merge(['from'=>'web','start_date'=>$start_date,'end_date'=>$end_date,'start_time'=>$start_time,'end_time'=>$end_time,'v_id'=>$v_id ])
+		]);
+		if (!empty($result) && $result->getStatusCode() == 422) {
+			$response = $result->getData();
+			// dd($response->validator);
+			Flash::error($response->message);
+			$request->flash();
+			return \Redirect::back()->withErrors([])->withInput();
+		}
+		//return $result;
+		Flash::success($result->getData()->message);
+		return redirect()->back();
+	}
+
+	public function availability(Request $request)
+	{
+		$v_id                     = $request->v_id;
+		$request['opening_time']  = date("H:i:s", strtotime($request->opening_time));
+		$request['closing_time']  = date("H:i:s", strtotime($request->closing_time));
+		$request['opening_time2'] = date("H:i:s", strtotime($request->opening_time2));
+		$request['closing_time2'] = date("H:i:s", strtotime($request->closing_time2));
+		$result = app()->call('App\Http\Controllers\Api\Partner\PartnerController@availabilty');
+		if($result->status() != 200){
+			//dd($result->status());
+			Flash::error($result->getData()->message);
+			$request->flash();
+			return \Redirect::back()->withErrors([])->withInput();
+		}
+		Flash::success($result->getData()->message);
+		return redirect()->back();
+	}
+
+	public function working_days(Request $request)
+	{
+		$v_id                     = $request->v_id;
+		$result = app()->call('App\Http\Controllers\Api\Partner\PartnerController@workingDays');
+		if($result->status() != 200){
+			Flash::error($result->getData()->message);
+			$request->flash();
+			return \Redirect::back()->withErrors([])->withInput();
+		}
+
+		Flash::success($result->getData()->message);
+		return redirect()->back();
 	}
 }

@@ -14,6 +14,7 @@ Route::group(['as' =>'admin.','prefix'=>'admin','middleware'=>['web','auth','Che
 	Route::get('/vendor/{id}/store/create',[App\Http\Controllers\Admin\StoreController::class, 'create'])->where('id', '[0-9]+')->where('s_id', '[0-9]+');
 	Route::get('/vendor/{id}/store/{s_id}/edit',[App\Http\Controllers\Admin\StoreController::class, 'edit'])->where('id', '[0-9]+')->where('s_id', '[0-9]+');
 	Route::put('/vendor/stores/{id}/delete',[App\Http\Controllers\Admin\StoreController::class, 'delete']);
+	Route::put('/vendor/stores/mode',[App\Http\Controllers\Admin\StoreController::class, 'updateVendorStoreMode']);
 	Route::post('/vendor/stores/0/multidelete',[App\Http\Controllers\Admin\StoreController::class, 'multidelete'])->name('storemultidelete');
 	// Route::get('/vendor/stores/{v_id}/edit_business',[App\Http\Controllers\Admin\StoreController::class, 'index'])->where('v_id', '[0-9]+');
 

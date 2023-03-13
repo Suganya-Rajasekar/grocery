@@ -9,23 +9,22 @@
 <div class="page-header page-header-default">
 	<div class="page-header-content">
 		<div class="page-title d-flex align-items-center">
-			<h5><span class="text-semibold">{!! $chef->name !!}</span> - @if($id == ''){!! 'Add new ' !!}@else {!! 'Edit Store' !!}@endif
+			<h5><span class="text-semibold">{!! $chef->name !!}</span> - @if($id == ''){!! 'Add new ' !!}@else {!! 'Edit' !!}{!! isset($restaurant) ? ' '.$restaurant->name : '' !!}{!! ' Store' !!}@endif
 			</h5>
-			@if(getRoleName() == 'admin')
+			{{-- if(getRoleName() == 'admin') --}}
 			<span class="type-switch-asw mx-2">
 				{{-- <legend class="text-semibold">Type</legend> --}}
 				<label class="switch mb-0">
-					<input type="checkbox" name="type" class="typebtn" @if(isset($chef->type) && $chef->type == 'event') checked @endif>
+					<input type="checkbox" name="type" class="typebtn" @if(isset($restaurant->mode) && $restaurant->mode == 'open') checked @endif>
 					<div class="slider round">
 						<span class="event">OPEN</span>
 						<span class="chef">CLOSE</span>
 					</div>
 				</label>
 			</span>
-			@endif
+			{{-- endif --}}
 		</div>
 	</div>
-
 	<div class="breadcrumb-line">
 		<ul class="breadcrumb">
 			<li><a href="{!! url(getRoleName().'/dashboard') !!}"><i class="icon-home2 position-left"></i>Dashboard</a></li>
@@ -125,8 +124,8 @@
 							<div class="panel-body business-info-asw">
 								<fieldset>
 									<legend class="text-semibold">
-										<i class="fa fa- clock-o position-left"></i>
-										Schedule Off days in Advance
+										<i class="fas fa-check-circle position-left"></i>
+										Schedule Off week days &nbsp;&nbsp;<small style="color:red;"><b>Note :</b> Uncheck the days on which you are available.</small>
 										<a class="control-arrow" data-toggle="collapse" data-target="#demo3">
 											<i class="icon-circle-down2"></i>
 										</a>
@@ -156,7 +155,7 @@
 											?>
 											<div class='mr-3'>
 												<label>
-												<input type='checkbox' name='working_days[]' value="{!! $dayName !!}" {!! $checked !!}>
+												<input type='checkbox' class="styled" name='working_days[]' value="{!! $dayName !!}" {!! $checked !!}>
 												{!! ucfirst($dayName) !!}<br>
 												</label>
 											</div>
@@ -198,13 +197,13 @@
 							<div class="panel-body business-info-asw">
 								<fieldset>
 									<legend class="text-semibold">
-										<i class="fa fa- clock-o position-left"></i>
-										Schedule Off time in Advance
+										<i class="fa fa-calendar position-left"></i>
+										Schedule Off days with time in advance
 										<a class="control-arrow" data-toggle="collapse" data-target="#demo1">
 											<i class="icon-circle-down2"></i>
 										</a>
 									</legend>
-									<div class="row collapse in show" id="demo1">
+									<div class="row collapse in" id="demo1">
 										<div class="form-group col-md-6">
 											{{-- <label class="text-semibold">Off time in Advance :</label> --}}
 											<div class="input-group align-items-center">
@@ -226,12 +225,87 @@
 				</div>
 				@endif
 			</form>
+			<form action="{!!url(getRoleName().'/schedule')!!}" method="POST" class="form-horizontal" enctype="Multipart/form-data" id="scheduleform">
+				{{ csrf_field() }}{{ method_field('POST') }}
+				@if(getRoleName() == 'vendor') 
+				<div class="row">
+					<div class="col-md-12">
+						@endif
+						<div class="panel panel-flat">
+							<div class="panel-heading">
+								<h5 class="panel-title"><i class="icon-pie-chart3 position-left"></i> Category selection </h5>
+								{{-- <div class="heading-elements">
+									<ul class="icons-list">
+										<li><a data-action="collapse"></a></li>
+									</ul>
+								</div> --}}
+							</div>
+							<input type="hidden" name="id" value="{{ (isset($restaurant)) ? $restaurant->id : '' }}">
+							<input type="hidden" name="v_id" id="v_id" value="{!! isset($chef->id) ? $chef->id : '' !!}">
+							<input type="hidden"  class="form-control" name="area_code" id="area_code" value="" disabled="">
+							<div class="panel-body business-info-asw" style="cursor: pointer;">
+								<fieldset>
+									<legend class="text-semibold" data-toggle="collapse" data-target="#demo4">
+										<i class="icon-pie-chart3 position-left"></i>
+										Select available category in your shop
+										<a class="control-arrow">
+											<i class="icon-circle-down2"></i>
+										</a>
+									</legend>
+									<div class="row collapse in" id="demo4">
+										<div class="dual-list list-left col-md-5">
+											<div class="well text-right">
+												<div class="row">
+													<b> Select / add category for your shop </b>
+													<div class="input-group">
+														<input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+														<span class="input-group-text selector">
+															<input type="checkbox" class="form-check-input mt-0 styled">
+														</span>
+													</div>
+												</div>
+												<ul class="list-group">
+													@foreach($cuisines as $cuisine)
+													<li class="list-group-item">{!! $cuisine->name !!}</li>
+													@endforeach
+												</ul>
+											</div>
+										</div>
+										<div class="list-arrows col-md-1 text-center">
+											<button type="button" class="btn btn-outline-info move-left"><i class="fa fa-arrow-left"></i></button>
+											<button type="button" class="btn btn-outline-info move-right"><i class="fa fa-arrow-right"></i></button>
+										</div>
+										<div class="dual-list list-right col-md-5">
+											<div class="well">
+												<div class="row">
+													<b> Unselect / remove category from your shop </b>
+													<div class="input-group">
+														<span class="input-group-text selector">
+															<input type="checkbox" class="form-check-input mt-0 styled">
+														</span>
+														<input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+													</div>
+												</div>
+												<ul class="list-group">
+												</ul>
+											</div>
+										</div>
+									</div>
+								</fieldset>
+							</div>
+						</div>
+						@if(getRoleName() == 'vendor')
+					</div>
+				</div>
+				@endif
+			</form>
 		</div>
 	</div>
 	<form action="{!!url(getRoleName().'/chef/store')!!}" method="POST" class="form-horizontal" enctype="Multipart/form-data" id="chef_form">
 		{{ csrf_field() }}{{ method_field('PUT') }}
 		<input autocomplete="false" name="hidden" type="text" class="hidden">
 		<input type="hidden" name="c_id" id="c_id" value="{!! isset($chef->id) ? $chef->id : '0' !!}">
+		<input type="hidden" name="s_id" id="s_id" value="{!! isset($restaurant->id) ? $restaurant->id : '0' !!}">
 		<div class="row">
 			<div class="col-md-6">
 				<div class="panel panel-flat">
@@ -404,135 +478,24 @@
 <!-- /content area -->
 <style type="text/css">
 	#myMap {max-width:100%;height: 200px;width: 920px;z-index:1;}
+	.dual-list .list-group {
+		margin-top: 8px;
+	}
+	.list-left li, .list-right li {
+		cursor: pointer;
+	}
+	.list-arrows {
+		padding-top: 100px;
+	}
+	.list-arrows button {
+		margin-bottom: 20px;
+	}
 </style>
 @endsection
 @section('script')	
 <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAUqxCzqXHg1jeS_RUd4p4ukmVrcXckxYA&callback=initialize" type="text/javascript"></script>
+<script type="text/javascript" src="{!! asset('assets/admin/js/store.js') !!}"></script>
 <script type="text/javascript">
-	function initialize(){
-		var map;
-		var marker;
-		var lat     = $('#lat').val();
-		var lang    = $('#lang').val();
-		var myLatlng= new google.maps.LatLng(lat,lang);
-		var geocoder= new google.maps.Geocoder();
-		const input = document.getElementById("txtPlaces");
-		// var infowindow = new google.maps.InfoWindow();
-		var mapOptions  = {
-			zoom: 15,
-			center: new google.maps.LatLng(lat,lang),
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		};
-		map     = new google.maps.Map(document.getElementById("myMap"), mapOptions);
-		marker  = new google.maps.Marker({
-			map: map,
-			position: new google.maps.LatLng(lat,lang),
-			draggable: true
-		});
-
-		const options = {
-			// componentRestrictions: { country: "us" },
-			fields: ["formatted_address", "geometry", "name"],
-			origin: map.getCenter(),
-			strictBounds: false,
-			types: ["establishment"],
-		};
-		// map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
-		const autocomplete  = new google.maps.places.Autocomplete(input, options);
-		autocomplete.bindTo("bounds", map);
-		const infowindow    = new google.maps.InfoWindow();
-		const infowindowContent = document.getElementById("infowindow-content");
-		infowindow.setContent(infowindowContent);
-		autocomplete.addListener("place_changed", () => {
-			infowindow.close();
-			marker.setVisible(false);
-			const place = autocomplete.getPlace();
-			var latitude  = place.geometry.location.lat();
-			var longitude = place.geometry.location.lng();
-			$('#lat').val(latitude);
-			$('#lang').val(longitude);
-
-			if (!place.geometry || !place.geometry.location) {
-				window.toast("No details available for input: '" + place.name + "'",'Error!', 'error');
-				return;
-			}
-
-			if (place.geometry.viewport) {
-				map.fitBounds(place.geometry.viewport);
-			} else {
-				map.setCenter(place.geometry.location);
-				map.setZoom(17);
-			}
-			marker.setPosition(place.geometry.location);
-			marker.setVisible(true);
-			infowindowContent.children["place-name"].textContent = place.name;
-			infowindowContent.children["place-address"].textContent =
-			place.formatted_address;
-			infowindow.open(map, marker);
-		});
-
-		geocoder.geocode({'latLng': myLatlng }, function(results, status) {
-			if (status == google.maps.GeocoderStatus.OK) {
-				if (results[0]) {
-					$('#txtPlaces').val(results[0].formatted_address);
-					$('#lat').val(marker.getPosition().lat());
-					$('#lang').val(marker.getPosition().lng());
-					var components = results[0].address_components;
-				}
-			}
-		});
-		google.maps.event.addListener(marker, 'dragend', function() {
-			geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
-				if (status == google.maps.GeocoderStatus.OK) {
-					if (results[0]) {
-						$('#txtPlaces').val(results[0].formatted_address);
-						$('#lat').val(marker.getPosition().lat());
-						$('#lang').val(marker.getPosition().lng());
-						var components = results[0].address_components;
-					}
-				}
-			});
-		});
-		google.maps.event.addListener(map, 'click', function (event) {
-			$('#mlatitude').val(event.latLng.lat());
-			$('#mlongitude').val(event.latLng.lng());
-			placeMarker(event.latLng);
-			geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
-				if (status == google.maps.GeocoderStatus.OK) {
-					if (results[0]) {
-						$('#txtPlaces').val(results[0].formatted_address);
-						$('#lat').val(marker.getPosition().lat());
-						$('#lang').val(marker.getPosition().lng());
-						var components = results[0].address_components;
-					}
-				}
-			});
-		});
-	}
-	function placeMarker(location) {
-		if (marker == undefined){
-			marker = new google.maps.Marker({
-				position: location,
-				map: map, 
-				animation: google.maps.Animation.DROP,
-			});
-		} else {
-			marker.setPosition(location);
-		}
-		map.setCenter(location);
-	}
-	$(".styled").uniform({
-		radioClass: 'choice'
-	});
-	$('.pickatime').pickatime();
-	$('.daterange-time').daterangepicker({
-		timePicker: true,
-		applyClass: 'bg-slate-600',
-		cancelClass: 'btn-danger',
-		locale: {
-			format: 'YYYY-MM-DD h:mm a'
-		}
-	});
 	$(document).on('change','.location',function(e){
 		e.preventDefault();
 		var location = $(this).val(); 
@@ -550,15 +513,6 @@
 			}
 		});
 	});
-	$(document).on('change', '#status', function() {
-		if ( this.value == 'cancelled') {
-			$("#reason").show();
-			$('#inputreason').attr('required',true);
-		} else {
-			$("#reason").hide();
-			$('#inputreason').removeAttr('required',true);
-		}
-	});
 	$(document).ready(function () {
 		$("#phone").keypress(function (e) {
 			var length = $(this).val().length;
@@ -570,8 +524,6 @@
 				return false;
 			}
 		});
-	});
-	$(document).on('change','.typebtn',function(){
 	});
 </script>
 @endsection

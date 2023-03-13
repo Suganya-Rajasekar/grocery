@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use App\Models\Translate;
 use App\Models\Addon;
-use App\Traits\Dynamic;
-use App\Traits\Log;
-use App\Traits\PushNotification;
+// use App\Traits\Dynamic;
+// use App\Traits\Log;
+// use App\Traits\PushNotification;
 
 /**
  * Class category
@@ -21,7 +21,7 @@ use App\Traits\PushNotification;
  */
 class Restaurants extends Model
 {
-	use /*Log,*/Dynamic,PushNotification;
+	// use Log,Dynamic,PushNotification;
 	public $table = 'restaurants';
 	
 	const CREATED_AT = 'created_at';
@@ -91,7 +91,7 @@ class Restaurants extends Model
 		'deleted_at' => 'nullable'
 	];
 
-	protected $appends       = [/*'tags',*/'budget_name','event_time','chef_sector'];
+	protected $appends       = [/*'tags',*/'budget_name','event_time'/*,'chef_sector'*/];
 
 	/**
 	* Get the budget that owned by restaurant.

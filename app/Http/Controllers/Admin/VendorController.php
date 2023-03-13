@@ -8,9 +8,26 @@ use App\Models\Chefs;
 use App\Models\Cuisines;
 use App\Models\Locations;
 use App\Models\Restaurants;
+use App\Models\User;
 
 class VendorController extends Controller
 {
+	private $status		= 403;
+	private $message	= "Only vendors are allowed";
+
+	public function testRole()
+	{
+		$guard	= (request('from') == 'mobile') ? 'api' : 'web';
+		$user	= auth($guard)->user();
+		$role_id= User::where('id', $user->id)->pluck('role')->toArray()[0];
+
+		if(isset($role_id) && ($role_id == 3 || $role_id == 1 || $role_id == 5)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	* Show the application dashboard.
 	*
@@ -232,5 +249,174 @@ class VendorController extends Controller
 		$request->all();
 		$exporter = app()->makeWith(ChefExport::class, compact('request'));  
 		return $exporter->download('ChefExport_'.date('Y-m-d').'.'.$slug);
+	}
+
+	/* Chef Info */
+	public function vendorData( Request $request)
+	{
+		$status		= 200;
+		$guard		= ($request->from == 'mobile') ? 'api' : 'web';
+		$auth_role	= auth($guard)->user()->role;
+		$auth_id	= ($auth_role == 1 || $auth_role == 5) ? $request->v_id : auth($guard)->user()->id;
+		if ($this->testRole() || $auth_role == 1) {
+			$cmessage	= $restaurants = array();
+			if ($this->method == 'PATCH') {
+				$rules['tags']		= 'required|array';
+				$rules['tags.*']	= 'required|exist_check:common_datas,where:type:=:tag-whereIn:id:'.implode('~', $request->tags);
+				// $rules['budget']	= 'required|numeric|exists:common_datas,id';
+				$rules['tax']		= 'numeric';
+				$rules['budget']	= 'required|numeric';
+				$rules['fssai']		= 'required|numeric';
+				$rules['location']	= 'required|numeric|exists:locations,id';
+				$rules['address']	= 'required';
+				$rules['locality']	= 'required';
+				$rules['latitude']	= 'required';
+				$rules['longitude']	= 'required';
+				$rules['ext_address']		= 'required';
+				$rules['description']		= 'required|min:250';
+				$rules['preparation_time']	= 'required|in:preorder,ondemand';
+			} elseif ($this->method == 'PUT') {
+				$rules['mode']	= 'required|in:open,close';
+				$rules['v_id']	= 'required|exists:users,id';
+				$rules['s_id']	= 'required|numeric|exist_check:restaurants,where:vendor_id:=:'.$auth_id.'-where:id:=:'.$request->s_id;
+			}
+
+			if ($this->method == 'PATCH' || $this->method == 'PUT') {
+				$nicenames['preparation_time'] = 'Preparation time';
+				$nicenames['s_id'] = 'Store';
+				$nicenames['v_id'] = 'Vendor';
+				$this->validateDatas($request->all(),$rules,$cmessage,$nicenames);
+			}
+
+			$selectArr		= ['id','description', 'tax', 'tags', 'budget', 'location', 'locality', 'landmark', 'preparation_time', 'adrs_line_1 as ext_address','adrs_line_2 as address', 'latitude', 'longitude','mode'];
+			$restaurants	= Restaurants::where('vendor_id',$auth_id);
+			$restaurants	= ($this->method == 'PUT') ? $restaurants->where('id',$request->s_id)->addSelect('mode','id','vendor_id') : $restaurants->addSelect($selectArr);
+			$restaurants	= $restaurants->first();
+			// $restaurants Restaurants::find($res->id);
+			if ($this->method == 'PATCH') {
+				$restaurants->tags			= /*implode(',',*/ $request->tags/*)*/;
+				$restaurants->budget		= $request->budget;
+				$restaurants->tax			= (isset($request->tax)) ? $request->tax :0;
+				$restaurants->location		= $request->location;
+				$restaurants->fssai			= $request->fssai;
+				$restaurants->locality		= $request->locality;
+				$restaurants->landmark		= (isset($request->landmark)) ? $request->landmark :'';
+				$restaurants->description	= $request->description;
+				$restaurants->adrs_line_2	= $request->address;
+				$restaurants->adrs_line_1	= $request->ext_address;
+				$restaurants->latitude		= $request->latitude;
+				$restaurants->longitude		= $request->longitude;
+				$restaurants->preparation_time	= $request->preparation_time;
+				$restaurants->preorder			= ($request->preparation_time == 'preorder') ? 'yes' : 'no';
+
+				$restaurants->save();
+				$restaurants->makeHidden('preorder', 'adrs_line_2', 'adrs_line_1');
+				$message	= 'Secondary info updated successfully';
+			} elseif ($this->method == 'PUT') {
+				$restaurants->mode	= $request->mode;
+				$restaurants->save();
+				// $this->schedule($request);
+				$message	= 'Mode updated successfully';
+			} else {
+				$message	= 'Secondary info details fetched';
+			}
+			/*if (!empty($restaurants) > 0) {
+				$restaurants->makeHidden('updated_at');
+				if ($this->method != 'PUT') 
+					$restaurants->budget_name	= $restaurants->location_name = '';
+				if (!empty($restaurants->budget_info)) {
+					$restaurants->budget_name	= $restaurants->budget_info->name;
+				}
+				if (!empty($restaurants->location_info)) {
+					$restaurants->location_name	= $restaurants->location_info->name;
+				}
+				$restaurants->makeHidden('location_info','budget_info');
+			}*/
+			$response['vendor_secondaryInfo']	= $restaurants;
+		} else {
+			$status		= 403;
+			$message	= "Only vendors are allowed";
+		}
+		$response['message']= $message;
+		$response['status']	= ($status == 200) ? 'success' : 'warning';
+		return \Response::json($response,$status);
+	}
+
+	/* Schedule off time in Advance */
+	public function schedule( Request $request)
+	{
+		$status	= 200;
+		$guard		= ($request->from == 'mobile') ? 'api' : 'web';
+		$auth_role	= auth($guard)->user()->role;
+		$auth_id	= ($auth_role == 1 || $auth_role == 5) ? $request->v_id : auth($guard)->user()->id;
+		if ($this->testRole() || $auth_role == 1) {
+			$cmessage	= $rules = $nicenames	= [];
+			if ($this->method == 'POST') {
+				$rules['start_date']= 'required|date_format:Y-m-d|after_or_equal:'.date('Y-m-d');
+				$rules['end_date']	= 'required|date_format:Y-m-d|after_or_equal:start_date';
+				$rules['start_time']= ['required','date_format:H:i:s'];
+				$rules['end_time']	= ['required','date_format:H:i:s'];
+				$start_date	= request('start_date');
+				$end_date	= request('end_date');
+				if (strtotime($start_date) <= strtotime(date('Y-m-d'))) {
+					array_push($rules['start_time'], 'after:'.date('H:i:s'));
+				}
+				if (strtotime($start_date) === strtotime($end_date)) {
+					array_push($rules['end_time'], 'different:start_time');
+				}
+			} elseif ($this->method == 'PUT') {
+				$rules['mode']  = 'required|in:open,close';  
+			}
+			$validateResponse = $this->validateDatas($request->all(),$rules,$cmessage,$nicenames,$guard);
+			if ($guard == 'web' && !empty($validateResponse)) {
+				return \Response::json($validateResponse, 422);
+			}
+
+			if ($this->method == 'POST') {				
+				$data['off_from']	= $start_date.' '.request('start_time');
+				$data['off_to']		= $end_date.' '.request('end_time');
+				$chef	= Chefs::find($auth_id)/*->get()->where('avalability','not_avail')*/;
+				$chef->singlerestaurant()->update($data);
+
+				$extra['vendor_id']		= $extra['created_by'] = $chef->id;
+				$extra['restaurant_id']	= $chef->singlerestaurant->id;
+				$extra['created_by']	= $chef->id;
+				$datamerge	= array_merge($data, $extra);
+				$offlineData= new Offtimelog;
+				foreach ($datamerge as $key => $value) {
+					if($key != 'created_by')
+						$offlineData	= $offlineData->where($key,$value);
+				}
+				$offlineData		= $offlineData->first();
+				$data['vendor_id']	= $auth_id;
+				$offData	= (!empty($offlineData)) ? $offlineData->fill($data)->save() : Offtimelog::create($data);
+
+				$message	= 'Your are set to OFF from '.$start_date.' '.request('start_time').' to '.$end_date.' '.request('end_time');
+			}
+			elseif($this->method == 'PUT'){
+				if($request->mode == 'close'){
+					$res     = Restaurants::select('id')->where('vendor_id',$auth_id)->first();
+					$offtime = new Offtimelog;
+					$offtime->vendor_id 	= $auth_id;
+					$offtime->restaurant_id = $res->id;
+					$offtime->type      	= 'mode';
+					$offtime->off_from  	= date('Y-m-d H:i:s',time());
+					$offtime->save();
+					$message	= 'Your are set to OFFTIME';   
+				} else {
+					$offtime = Offtimelog::where('vendor_id',$auth_id)->where('type','mode')->where('off_to',null)->first();
+					if(!empty($offtime)){
+						$offtime->off_to = date('Y-m-d H:i:s',time()); 
+						$offtime->save();
+						$message	= 'You removed the OFFTIME';   
+					}					
+				}
+			}
+		} else {
+			$status		= 403;
+			$message	= "Only vendors are allowed";
+		}
+		$response['message']	= $message;
+		return \Response::json($response,$status);
 	}
 }
