@@ -1,4 +1,6 @@
 
 Git URL and Token
 https://github.com/Suganya-Rajasekar/grocery
-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
+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
+
+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

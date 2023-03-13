@@ -1,58 +1,62 @@
 <?php
 Route::group(['as' =>'admin.','prefix'=>'admin','middleware'=>['web','auth','CheckAdmin','StripEmptyParams']],function(){
 
-	Route::post('/chef/0/multidelete',[App\Http\Controllers\ChefController::class, 'multidelete'])->name('multidelete');
-	Route::resource('complaints', App\Http\Controllers\CustomerComplaintController::class);
 	Route::get('/pieChart', [App\Http\Controllers\DashboardController::class, 'pieChart']);
-	Route::get('/generatepdf/{id}', [App\Http\Controllers\PDFController::class, 'generatePDF']);
-	Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-	Route::get('/homecontent', [App\Http\Controllers\HomeController::class, 'home_content'])->name('home_content');
-	Route::post('/homecontent_save',[App\Http\Controllers\HomeController::class, 'homecontent_store']);
 	Route::get('dashboard',[App\Http\Controllers\DashboardController::class],'vendor')->name('dashboard');
 	Route::get('/profile/{id}/edit',[App\Http\Controllers\CustomerController::class, 'profileedit'])->where('id', '[0-9]+');
 	Route::post('/adminprofile_save',[App\Http\Controllers\CustomerController::class, 'adminprofile_store']);
-	Route::resource('common', App\Http\Controllers\CommonController::class);
-	Route::put('/common/store',[App\Http\Controllers\CommonController::class, 'update']); 
-	Route::put('/common/{id}/{type}/delete',[App\Http\Controllers\CommonController::class, 'destroy']);
-	// Route::resource('category', App\Http\Controllers\CategoryController::class);
-	// Route::put('/category/{id}/delete',[App\Http\Controllers\CategoryController::class, 'destroy']);
-	Route::resource('blog_category', App\Http\Controllers\BlogCategoryController::class);
-	Route::put('/blog_category/{id}/delete',[App\Http\Controllers\BlogCategoryController::class, 'destroy']);
-	Route::resource('chef', App\Http\Controllers\ChefController::class);
+
+	Route::resource('vendor', App\Http\Controllers\Admin\VendorController::class);
+	Route::put('vendor/{id}/delete',[App\Http\Controllers\Admin\VendorController::class, 'delete']);
+	Route::post('/vendor/0/multidelete',[App\Http\Controllers\Admin\VendorController::class, 'multidelete'])->name('multidelete');
+
+	Route::get('/vendor/{id}/store/',[App\Http\Controllers\Admin\StoreController::class, 'index'])->where('id', '[0-9]+');
+	Route::get('/vendor/{id}/store/create',[App\Http\Controllers\Admin\StoreController::class, 'create'])->where('id', '[0-9]+')->where('s_id', '[0-9]+');
+	Route::get('/vendor/{id}/store/{s_id}/edit',[App\Http\Controllers\Admin\StoreController::class, 'edit'])->where('id', '[0-9]+')->where('s_id', '[0-9]+');
+	Route::put('/vendor/stores/{id}/delete',[App\Http\Controllers\Admin\StoreController::class, 'delete']);
+	Route::post('/vendor/stores/0/multidelete',[App\Http\Controllers\Admin\StoreController::class, 'multidelete'])->name('storemultidelete');
+	// Route::get('/vendor/stores/{v_id}/edit_business',[App\Http\Controllers\Admin\StoreController::class, 'index'])->where('v_id', '[0-9]+');
+
 	Route::match(['get', 'post'], 'chefordering', [
-		'uses'	=> 'App\Http\Controllers\ChefController@ordering',
+		'uses'	=> 'App\Http\Controllers\Admin\VendorController@ordering',
 		'as'	=> 'chef_ordering',
 	]);
-	Route::put('chef/{id}/delete',[App\Http\Controllers\ChefController::class, 'delete']);
-	Route::resource('subadmin', App\Http\Controllers\SubAdminController::class);
+
+	Route::get('/store/{v_id}/{res_id}/menu_item',[App\Http\Controllers\MenuitemController::class, 'index'])->where('v_id', '[0-9]+')->where('res_id', '[0-9]+');
+	Route::get('/store/{v_id}/{res_id}/menu_item/rearrange',[App\Http\Controllers\MenuitemController::class, 'orderrearrange'])->where('v_id', '[0-9]+')->where('res_id', '[0-9]+');
+	Route::put('menuitem/store',[App\Http\Controllers\MenuitemController::class, 'store'])->where('v_id', '[0-9]+')->where('res_id', '[0-9]+');
+	Route::get('/store/{v_id}/{res_id}/menu_item/create',[App\Http\Controllers\MenuitemController::class, 'create'])->where('v_id', '[0-9]+')->where('res_id', '[0-9]+');
+	Route::post('/store/{v_id}/{res_id}/menu_item/store',[App\Http\Controllers\MenuitemController::class, 'update'])->where('v_id', '[0-9]+')->where('res_id', '[0-9]+');
+	Route::get('/store/{v_id}/{res_id}/menu_item/edit/{id}',[App\Http\Controllers\MenuitemController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+')->where('res_id', '[0-9]+');
+	
+	Route::get('/vendor/{v_id}/addon',[App\Http\Controllers\AddonController::class, 'index'])->where('v_id', '[0-9]+');
+	Route::get('/vendor/{v_id}/addon/create',[App\Http\Controllers\AddonController::class, 'create'])->where('v_id', '[0-9]+');
+	Route::post('/vendor/{v_id}/addon/store',[App\Http\Controllers\AddonController::class, 'update'])->where('v_id', '[0-9]+');
+	Route::get('/vendor/{v_id}/addon/edit/{id}',[App\Http\Controllers\AddonController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
+	
+	Route::get('/vendor/{v_id}/unit',[App\Http\Controllers\AddonController::class, 'index'])->where('v_id', '[0-9]+');
+	Route::get('/vendor/{v_id}/unit/create',[App\Http\Controllers\AddonController::class, 'create'])->where('v_id', '[0-9]+');
+	Route::post('/vendor/{v_id}/unit/store',[App\Http\Controllers\AddonController::class, 'update'])->where('v_id', '[0-9]+');
+	Route::get('/vendor/{v_id}/unit/edit/{id}',[App\Http\Controllers\AddonController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
+	
+	Route::get('/vendor/{v_id}/category',[App\Http\Controllers\CategoryController::class, 'index'])->where('v_id', '[0-9]+');
+	Route::get('/vendor/{v_id}/category/create',[App\Http\Controllers\CategoryController::class, 'create'])->where('v_id', '[0-9]+');
+	Route::post('/vendor/{v_id}/category/store',[App\Http\Controllers\CategoryController::class, 'update'])->where('v_id', '[0-9]+');
+	Route::get('/vendor/{v_id}/category/edit/{id}',[App\Http\Controllers\CategoryController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
+
 	Route::resource('customer/all', App\Http\Controllers\CustomerController::class);
 	Route::get('/customer',[App\Http\Controllers\CustomerController::class, 'index']);
 	Route::get('/customer/create',[App\Http\Controllers\CustomerController::class, 'create']);
 	Route::post('/customer/store',[App\Http\Controllers\CustomerController::class, 'update']);
 	Route::get('/customer/{id}/edit',[App\Http\Controllers\CustomerController::class, 'edit'])->where('id', '[0-9]+');
+
 	Route::resource('cuisines', App\Http\Controllers\CuisineController::class);
 	Route::put('/cuisines/store',[App\Http\Controllers\CuisineController::class, 'update']);
 	Route::get('/cuisines/create',[App\Http\Controllers\CuisineController::class, 'create']);
 	Route::post('/cuisines/explore',[App\Http\Controllers\CuisineController::class, 'exploreoption']);
 	Route::put('/cuisines/{id}/delete',[App\Http\Controllers\CuisineController::class, 'destroy']);
 	Route::get('/cuisines/{id}/edit',[App\Http\Controllers\CuisineController::class, 'edit'])->where('id', '[0-9]+');
-	Route::resource('popular_recipe', App\Http\Controllers\PopularRecipeController::class);
-	Route::put('/popular_recipe/store',[App\Http\Controllers\PopularRecipeController::class, 'update']);
-	Route::get('/popular_recipe/create',[App\Http\Controllers\PopularRecipeController::class, 'create']);
-	Route::put('/popular_recipe/{id}/delete',[App\Http\Controllers\PopularRecipeController::class, 'destroy']);
-	Route::get('/popular_recipe/{id}/edit',[App\Http\Controllers\PopularRecipeController::class, 'edit'])->where('id', '[0-9]+');
-	Route::resource('whats_trending', App\Http\Controllers\WhatsTrendingController::class);
-	Route::put('/whats_trending/store',[App\Http\Controllers\WhatsTrendingController::class, 'update']);
-	Route::get('/whats_trending/create',[App\Http\Controllers\WhatsTrendingController::class, 'create']);
-	Route::put('/whats_trending/{id}/delete',[App\Http\Controllers\WhatsTrendingController::class, 'destroy']);
-	Route::get('/whats_trending/{id}/edit',[App\Http\Controllers\WhatsTrendingController::class, 'edit'])->where('id', '[0-9]+');
-	Route::resource('blogs', App\Http\Controllers\BlogsController::class);
-	Route::put('/blogs/store',[App\Http\Controllers\BlogsController::class, 'update']);
-	Route::get('/blogs/create',[App\Http\Controllers\BlogsController::class, 'create']);
-	Route::get('/tdsadd',[App\Http\Controllers\TdsController::class, 'create']);
-	Route::post('tds/store',[App\Http\Controllers\TdsController::class, 'store']);
-	Route::put('/blogs/{id}/delete',[App\Http\Controllers\BlogsController::class, 'destroy']);
-	Route::get('/blogs/{id}/edit',[App\Http\Controllers\BlogsController::class, 'edit'])->where('id', '[0-9]+');
+
 	Route::resource('location', App\Http\Controllers\LocationController::class);
 	Route::put('/location/store',[App\Http\Controllers\LocationController::class, 'update']);
 	Route::put('/location/{id}',[App\Http\Controllers\LocationController::class, 'destroy']);
@@ -60,164 +64,28 @@ Route::group(['as' =>'admin.','prefix'=>'admin','middleware'=>['web','auth','Che
 	Route::resource('banner', App\Http\Controllers\BannerController::class);
 	Route::put('/banner/{id}',[App\Http\Controllers\BannerController::class, 'destroy']);
 	Route::resource('offer', App\Http\Controllers\OfferController::class);
-	Route::resource('settingsboyapi', App\Http\Controllers\SettingsBoyApiController::class);
-	Route::get('/settings/settingsboyapi',[App\Http\Controllers\SettingController::class, 'Settingsboyapi']);
-	Route::get('/settings/settingsapikey', [App\Http\Controllers\SettingController::class, 'Settingsapikey']);
-	Route::post('/settings/updateapikey', [App\Http\Controllers\SettingController::class, 'updateapikey']);
-	Route::get('/settings',[App\Http\Controllers\SettingController::class, 'index']);
-	Route::resource('customer/bookmark', App\Http\Controllers\BookmarkController::class);
-	Route::put('/bookmark/{id}/delete',[App\Http\Controllers\BookmarkController::class, 'destroy']);
-	Route::resource('customer/wishlist', App\Http\Controllers\WishlistController::class);
-	Route::put('/wishlist/{id}/delete',[App\Http\Controllers\WishlistController::class, 'destroy']);
-	Route::resource('customer/favourites', App\Http\Controllers\FavouritesController::class);
-	Route::put('/favourites/{id}/delete',[App\Http\Controllers\FavouritesController::class, 'destroy']);
-	Route::resource('addon', App\Http\Controllers\AddonController::class);
-	Route::resource('timeslotcategory', App\Http\Controllers\TimeslotcategoryController::class);
-	Route::put('/timeslotcategory/store',[App\Http\Controllers\TimeslotcategoryController::class, 'update']);
-	Route::put('/timeslotcategory/{id}/delete',[App\Http\Controllers\TimeslotcategoryController::class, 'destroy']);
-	Route::resource('timeslotmanagement', App\Http\Controllers\TimeslotmanagementController::class);
-	Route::put('/timeslotmanagement/store',[App\Http\Controllers\TimeslotmanagementController::class, 'update']);
-	Route::put('/timeslotmanagement/{id}/delete',[App\Http\Controllers\TimeslotmanagementController::class, 'destroy']);
 
-	Route::resource('explore', App\Http\Controllers\ExploreController::class);
-	Route::put('/explore/store',[App\Http\Controllers\ExploreController::class, 'update']);
-	Route::get('/explore/create',[App\Http\Controllers\ExploreController::class, 'create']);
-	Route::put('/explore/{id}/delete',[App\Http\Controllers\ExploreController::class, 'destroy']);
-	Route::get('/explore/{id}/edit',[App\Http\Controllers\ExploreController::class, 'edit'])->where('id', '[0-9]+');
-	Route::resource('order', App\Http\Controllers\OrderController::class);
-	Route::resource('review', App\Http\Controllers\ReviewController::class);
-	Route::put('/review/{id}',[App\Http\Controllers\ReviewController::class, 'destroy']);
-	Route::resource('comment', App\Http\Controllers\CommentController::class);
-	Route::put('/comment/{id}',[App\Http\Controllers\CommentController::class, 'destroy']);
-
-	Route::resource('earning_report', App\Http\Controllers\EarningController::class);
-	Route::resource('revenue_report', App\Http\Controllers\EarningController::class);
-	Route::get('payout/orderlist/{payoutid}/{action}',[App\Http\Controllers\PayoutController::class, 'orderList'])->name('orderlist');
-	Route::resource('payout', App\Http\Controllers\PayoutController::class);
-	Route::resource('invoice', App\Http\Controllers\InvoiceController::class);
-	Route::get('payout_tds_add', [App\Http\Controllers\PayoutController::class,'tdsAdd']);
-	Route::get('order/{id}/view',[App\Http\Controllers\OrderController::class, 'view'])->where('id', '[0-9]+');
-	Route::put('orderstatuschange',[App\Http\Controllers\OrderController::class, 'orderStatusChange']);
-	Route::get('earning_report/downloadfile',[App\Http\Controllers\OrderController::class, 'downloadfile']);
-	Route::get('earning_report/downloadfilemis',[App\Http\Controllers\OrderController::class, 'downloadfilemis']);
-	Route::get('/chef/{v_id}/menu_item',[App\Http\Controllers\MenuitemController::class, 'index'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/menu_item/rearrange',[App\Http\Controllers\MenuitemController::class, 'orderrearrange'])->where('v_id', '[0-9]+');
-	Route::put('menuitem/store',[App\Http\Controllers\MenuitemController::class, 'store'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/menu_item/create',[App\Http\Controllers\MenuitemController::class, 'create'])->where('v_id', '[0-9]+');
-	Route::post('/chef/{v_id}/menu_item/store',[App\Http\Controllers\MenuitemController::class, 'update'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/menu_item/edit/{id}',[App\Http\Controllers\MenuitemController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/edit_business',[App\Http\Controllers\ChefController::class, 'index'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/addon',[App\Http\Controllers\AddonController::class, 'index'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/addon/create',[App\Http\Controllers\AddonController::class, 'create'])->where('v_id', '[0-9]+');
-	Route::post('/chef/{v_id}/addon/store',[App\Http\Controllers\AddonController::class, 'update'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/addon/edit/{id}',[App\Http\Controllers\AddonController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
-	
-	Route::get('/chef/{v_id}/unit',[App\Http\Controllers\AddonController::class, 'index'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/unit/create',[App\Http\Controllers\AddonController::class, 'create'])->where('v_id', '[0-9]+');
-	Route::post('/chef/{v_id}/unit/store',[App\Http\Controllers\AddonController::class, 'update'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/unit/edit/{id}',[App\Http\Controllers\AddonController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
-	
-	Route::get('/chef/{v_id}/category',[App\Http\Controllers\CategoryController::class, 'index'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/category/create',[App\Http\Controllers\CategoryController::class, 'create'])->where('v_id', '[0-9]+');
-	Route::post('/chef/{v_id}/category/store',[App\Http\Controllers\CategoryController::class, 'update'])->where('v_id', '[0-9]+');
-	Route::get('/chef/{v_id}/category/edit/{id}',[App\Http\Controllers\CategoryController::class, 'edit'])->where('id', '[0-9]+')->where('v_id', '[0-9]+');
-
-	Route::post('fundaccount',[App\Http\Controllers\ChefController::class, 'fundaccount'])->name('fundaccount');
-
-	Route::get('/unit',[App\Http\Controllers\AddonController::class, 'unit_index']);
-	Route::get('/unit/create',[App\Http\Controllers\AddonController::class, 'unit_create']);
-	Route::post('/unit/store',[App\Http\Controllers\AddonController::class, 'unit_update']);
-	Route::get('/unit/edit/{id}',[App\Http\Controllers\AddonController::class, 'unit_edit'])->where('id', '[0-9]+');
-	Route::put('/unit/{id}/delete',[App\Http\Controllers\AddonController::class, 'destroy']);
-
-	Route::get('/category',[App\Http\Controllers\CategoryController::class, 'index']);
-	Route::get('/category/create',[App\Http\Controllers\CategoryController::class, 'create']);
-	Route::post('/category/store',[App\Http\Controllers\CategoryController::class, 'update']);
-	Route::get('/category/edit/{id}',[App\Http\Controllers\CategoryController::class, 'edit'])->where('id', '[0-9]+');
-	Route::put('/category/{id}/delete',[App\Http\Controllers\AddonController::class, 'destroy']);
-
-	Route::post('/location_code',  [App\Http\Controllers\ChefController::class, 'locationCode']);
 	Route::get('/notification',[App\Http\Controllers\NotificationController::class, 'index']);
 	Route::post('/update_notify_isread',  [App\Http\Controllers\NotificationController::class, 'updateNotifyIsread']);
 	Route::get('/logactivity',[App\Http\Controllers\LogActivityController::class, 'index']);
-
-	Route::get('/chef/{v_id}/user_documents',[App\Http\Controllers\UserdocumentController::class, 'index'])->where('v_id', '[0-9]+');
-	Route::post('/chef/{v_id}/user_documents/store',[App\Http\Controllers\UserdocumentController::class, 'update'])->where('v_id', '[0-9]+');
 
 	Route::get('/pages',[App\Http\Controllers\PageController::class, 'index']);
 	Route::get('/pages/create',[App\Http\Controllers\PageController::class, 'create']);
 	Route::post('/pages/store',[App\Http\Controllers\PageController::class, 'update']);
 	Route::get('/pages/{id}/edit',[App\Http\Controllers\PageController::class, 'edit'])->where('id', '[0-9]+');
 	Route::put('/pages/{id}/delete',[App\Http\Controllers\PageController::class, 'destroy']);
-	Route::post('/schedule',[App\Http\Controllers\ChefController::class, 'schedule']);
-	Route::post('/createRzAccount',[App\Http\Controllers\ChefController::class, 'createRzAccount']);
-	Route::post('/availability',[App\Http\Controllers\ChefController::class, 'availability']);
-	Route::post('/working_days',[App\Http\Controllers\ChefController::class, 'working_days']);
-	Route::resource('offtimelog', App\Http\Controllers\OfftimelogController::class);
-	Route::DELETE('offtimelog/{id}/delete',[App\Http\Controllers\OfftimelogController::class, 'destroy']);
-
-	// Route::get('export/{slug}', [ExportController::class, 'export']);
-	Route::get('contactpage', [App\Http\Controllers\CommonController::class, 'contactpage']);
 
 	Route::get('cuisineexport/{slug}', [App\Http\Controllers\CuisineController::class, 'cuisineexport']);
-	Route::get('tagexport/{slug}', [App\Http\Controllers\CommonController::class, 'tagexport']);
-	Route::get('unitexport/{slug}', [App\Http\Controllers\CommonController::class, 'unitexport']);
-	Route::get('budgetexport/{slug}', [App\Http\Controllers\CommonController::class, 'budgetexport']);
-	Route::get('categoryexport/{slug}', [App\Http\Controllers\CommonController::class, 'categoryexport']);
-	Route::get('exploreexport/{slug}', [App\Http\Controllers\CommonController::class, 'exploreexport']);
-	Route::get('timecateexport/{slug}', [App\Http\Controllers\TimeslotcategoryController::class, 'timecateexport']);
-	Route::get('timeslotmanexport/{slug}', [App\Http\Controllers\TimeslotmanagementController::class, 'timeslotmanexport']);
-	Route::get('customerexport/{slug}', [App\Http\Controllers\CustomerController::class, 'customerexport']);
-	Route::get('bookmarkexport/{slug}', [App\Http\Controllers\BookmarkController::class, 'bookmarkexport']);
-	Route::get('wishlistexport/{slug}', [App\Http\Controllers\WishlistController::class, 'wishlistexport']);
-	Route::get('favouritesexport/{slug}', [App\Http\Controllers\FavouritesController::class, 'favouritesexport']);
-	Route::get('reviewexport/{slug}', [App\Http\Controllers\ReviewController::class, 'reviewexport']);
-	Route::get('subadminexport/{slug}', [App\Http\Controllers\SubAdminController::class, 'subadminexport']);
-	Route::get('pagesexport/{slug}', [App\Http\Controllers\PageController::class, 'pagesexport']);
-	Route::get('locationexport/{slug}', [App\Http\Controllers\LocationController::class, 'locationexport']);
-	Route::get('bannerexport/{slug}', [App\Http\Controllers\BannerController::class, 'bannerexport']);
-	Route::get('commentexport/{slug}', [App\Http\Controllers\CommentController::class, 'commentexport']);
-	Route::get('offerexport/{slug}', [App\Http\Controllers\OfferController::class, 'offerexport']);
-	Route::get('chefexport/{slug}', [App\Http\Controllers\ChefController::class, 'chefexport']);
-	Route::get('orderexport/{slug}', [App\Http\Controllers\OrderController::class, 'orderexport']);
-	Route::get('ordercsvexport/{slug}', [App\Http\Controllers\OrderController::class, 'ordercsvexport']);
-	Route::get('orderearexport/{slug}', [App\Http\Controllers\EarningController::class, 'orderearexport']);
-	Route::get('itemexport/{slug}', [App\Http\Controllers\EarningController::class, 'itemexport']);
-	Route::get('ticketexport/{slug}', [App\Http\Controllers\EarningController::class, 'ticketexport']);
-	Route::get('misearexport/{slug}', [App\Http\Controllers\EarningController::class, 'misearexport']);
-	Route::get('miseventexport/{slug}',[App\Http\Controllers\EarningController::class,'miseventexport']);
-	Route::get('customerearrexport/{slug}', [App\Http\Controllers\EarningController::class, 'customerearrexport']);
-	Route::get('delivery_retry',[App\Http\Controllers\DeliveryretryController::class,'index']);
-	Route::get('delivery_log',[App\Http\Controllers\DeliverylogController::class,'index']);
-	Route::get('chat', [App\Http\Controllers\ChatController::class, 'index']);
+
 	Route::get('blast_notification',[App\Http\Controllers\NotificationController::class, 'blastNotification']);
 	Route::post('notification_send',[App\Http\Controllers\NotificationController::class, 'blastNotification_send']);
 	Route::get('blast_notification/logs',[App\Http\Controllers\NotificationController::class, 'blastNotification_logs']);
-	Route::get('chef/{v_id}/menuitemexport/{slug}', [App\Http\Controllers\MenuitemController::class, 'menuitemexport']);
-	Route::get('chef/{v_id}/addonexport/{slug}', [App\Http\Controllers\AddonController::class, 'addonexport']);
+	Route::get('vendor/{v_id}/menuitemexport/{slug}', [App\Http\Controllers\MenuitemController::class, 'menuitemexport']);
+	Route::get('vendor/{v_id}/addonexport/{slug}', [App\Http\Controllers\AddonController::class, 'addonexport']);
 	Route::get('mediapress',[App\Http\Controllers\MediapressController::class,'index']);
 	Route::get('mediapress/create',[App\Http\Controllers\MediapressController::class,'create']);
     Route::put('/mediapress/store',[App\Http\Controllers\MediapressController::class, 'update']);
     Route::put('/mediapress/{id}/delete',[App\Http\Controllers\MediapressController::class, 'destroy']);
     Route::get('/mediapress/{id}/edit',[App\Http\Controllers\MediapressController::class, 'edit'])->where('id', '[0-9]+');
-    Route::post('chef/preparationtime',[App\Http\Controllers\ChefController::class,'preparationtime_change']);
-    Route::get('\earning_report\mis_events',[App\Http\Controllers\EarningController::class,'show']);
-    Route::get('\earning_report\ticket',[App\Http\Controllers\EarningController::class,'show']);
-    Route::get('referral',[App\Http\Controllers\ReferralController::class,'index']);
-    Route::POST('referral/save',[App\Http\Controllers\ReferralController::class,'store']);
-    Route::POST('wallet_amt_push',[App\Http\Controllers\CustomerController::class,'WalletAmountPush']);
-    Route::get('referral_users_list',[App\Http\Controllers\ReferralController::class,'referral_users_list']);
-    Route::get('customer/all/wallethistory/{id}',[App\Http\Controllers\CustomerController::class,'wallet_history']);
-    Route::get('home_event/themes',[App\Http\Controllers\ThemesController::class,'index']);
-    Route::get('home_event/themes/create',[App\Http\Controllers\ThemesController::class,'create']);
-    Route::get('home_event/themes/edit/{id}',[App\Http\Controllers\ThemesController::class,'edit'])->where('id','[0-9]+');
-    Route::post('home_event/themes/store',[App\Http\Controllers\ThemesController::class,'store']);
-	Route::DELETE('home_event/themes/img_remove',[App\Http\Controllers\ThemesController::class, 'destroy']);
-    Route::resource('home_event/preferences',App\Http\Controllers\PreferencesController::class);
-    Route::get('wallet_history',[App\Http\Controllers\CustomerController::class,'wallet_history']);
-    Route::get('wallethistory_export/{slug}',[App\Http\Controllers\CustomerController::class,'wallethistory_export']);
-    Route::get('home_event/section',[App\Http\Controllers\ThemesController::class,'homeevent_section']);
-    Route::PATCH('home_event/section',[App\Http\Controllers\ThemesController::class,'homeevent_section']);  
-    Route::resource('reels',App\Http\Controllers\ReelsController::class);
 });
 ?>
