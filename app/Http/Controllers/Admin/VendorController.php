@@ -78,6 +78,82 @@ class VendorController extends Controller
 
 	public function update( Request $request)
 	{
+		$rules['name']	= ['required', 'string', 'max:255'];
+		$rules['email']	= ['required', 'email', 'max:255', 'unique:users,email,'.$request->c_id, 'unique:restaurants,email,'.$request->c_id];
+		$rules['phone']	= ['required', 'numeric', 'unique:users,mobile,'.$request->c_id, 'unique:restaurants,phone,'.$request->c_id];
+		if( $request->hasFile('logo') ) {
+			$rules['logo']= 'required|mimes:jpeg,jpg,png';/*|dimensions:max_width=1024,max_height=1024*/
+		}
+		if(\Auth::user()->role == 1){
+			$rules['status']	= ['required', 'in:pending,approved,suspended,cancelled'];
+			if ($request->status == 'suspended' || $request->status == 'cancelled') {
+				$rules['reason']= ['required'];
+			}
+		}
+		$rules['adrs_line_1']	= 'required';
+		$rules['location']		= 'required|numeric|exists:locations,id';
+		$rules['latitude']		= 'required';
+		$rules['longitude']		= 'required';
+		$rules['commission']	= 'required';
+
+		$nicenames['name']		= 'Name';
+		$nicenames['email']		= 'Email';
+		$nicenames['mobile']	= 'Mobile';
+		$nicenames['reason']	= 'Declined reason';
+		$nicenames['adrs_line_1']	= 'Complete Address';
+		$nicenames['adrs_line_2']	= 'Exact location';
+		// echo "<pre>"; print_r($request->all()); exit;
+		$response = $this->validateDatas($request->all(),$rules,[],$nicenames,'web');
+		if (!empty($response)) {
+			\Flash::error($response['message']);
+			$request->flash();
+			return \Redirect::back()->withErrors($response['validator'])->withInput();
+		}
+
+		$res_id	= ($request->s_id == 0) ? 0 : $request->s_id;
+		$restaurant	= ($request->s_id == 0) ? new Restaurants : Restaurants::find($request->s_id);
+		$restaurant->vendor_id	= $request->c_id;
+		$restaurant->name		= $request->name;
+		$slug	= \Str::slug($request->name,'_');
+		if ($slug == '') {
+			$slug	= str_replace(' ', '_', str_replace('-', '_', $request->name));
+		}
+		$restaurant->slug		= $slug;
+		$restaurant->phone_code	= 91;
+		$restaurant->phone		= $request->phone;
+		$restaurant->email		= $request->email;
+		$restaurant->location	= $request->location;
+		$restaurant->tax		= ($request->tax != '') ? $request->tax : 0;
+		if(\Auth::user()->role == 1 ||\Auth::user()->role == 5) {
+			$restaurant->commission	= $request->commission;
+		}
+		$restaurant->latitude		= $request->latitude;
+		$restaurant->longitude		= $request->longitude;
+		$restaurant->adrs_line_1	= $request->adrs_line_1;
+		$restaurant->adrs_line_2	= $request->adrs_line_2;
+		$restaurant->status			= $request->status;
+		$restaurant->declined_reason= ($request->reason != '') ? $request->reason : '';
+		if( $request->hasFile('logo')) {
+			$filenameWithExt= $request->file('logo')->getClientOriginalName();
+			// $filename		= pathinfo($filenameWithExt, PATHINFO_FILENAME);
+			$extension		= $request->file('logo')->getClientOriginalExtension();
+			$fileNameToStore= $slug.'.'.$extension;
+			\Storage::delete($restaurant->avatarpath ?? null);
+			$avatar_path	= $request->file('logo')->storeAs('public/avatar', $fileNameToStore);
+			$restaurant->avatar	= $fileNameToStore;
+		}
+		$restaurant->save();
+
+		\Flash::success('Store details saved successfully.');
+		if($res_id != '') {
+			return redirect(getRoleName().'/vendor/'.$request->c_id.'/store/'.$restaurant->id.'/edit');
+		} else {
+			return redirect()->back();
+		}
+	}
+
+	public function update1( Request $request)
+	{
 		$v_id   = $request->v_id;
 		$nicenames = [];
 		if($v_id == '') {
@@ -418,5 +494,35 @@ class VendorController extends Controller
 		}
 		$response['message']	= $message;
 		return \Response::json($response,$status);
+	}
+
+	public function category(Request $request)
+	{
+		echo "<pre>"; print_r($request->all());exit;
+		$categories	= array_unique($request->categories);
+		$maincat	= [];
+		if (!empty($categories)) {
+			foreach ($categories as $key => $value) {
+				$subcat = [];
+				$cuisine= Cuisines::with('maincat')->find($value);
+				$subcat	= ['id' => $cuisine->id, 'name' => $cuisine->name, 'visibility_mode' => 'on', 'status' => 'active'];
+				$category	= ['id' => $cuisine->maincat->id, 'category_name' => $cuisine->maincat->name, 'categories' => [$subcat]];
+				if (!empty($maincat)) {
+					$val = array_search($cuisine->maincat->id, array_column($maincat, 'id'));
+					if ($val != '') {
+						$maincat[$val]['categories'][] = $subcat;
+					} else {
+						$maincat[]	= $category;
+					}
+				} else {
+					$maincat[]	= $category;
+				}
+			}
+			if (!empty($maincat)) {
+				// cuisines
+			}
+		}
+		print_r(json_encode($maincat));
+		exit();
 	}
 }

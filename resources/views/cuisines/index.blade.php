@@ -98,9 +98,9 @@ $dwnicon= ['pdf'=>'pdf','xls'=>'excel','csv'=>'csv'];
 				<tr>
 					<td>{!! ($key+1)+$page !!}</td>
 					<td><img src="@if($value->image != ''){!! $value->image !!}@endif" style="width: 40px;height: 40px;max-width: none;" class="img-circle" alt=""></td>
-					<td>{!!$value->name!!}</td>
-					<td>{!!$value->slug!!}</td>
-					<td>{!!$value->maincat!!}</td>
+					<td>{!! $value->name !!}</td>
+					<td>{!! $value->slug !!}</td>
+					<td>{!! $value->maincat_name !!}</td>
 					{{-- <td>{!! substr($value->description, 0, 50).'...' !!}</td> --}}
 					{{-- <td>
 						<input type="checkbox" class="styled cuisinecheck" data-id="{{ $value->id }}"name="explore" @if($value->explore == 'yes') checked @endif>

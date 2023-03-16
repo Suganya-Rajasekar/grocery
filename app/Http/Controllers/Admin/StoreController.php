@@ -40,9 +40,13 @@ class StoreController extends Controller
 	{
 		$id			= '';
 		$city		= Locations::all();
-		$cuisines	= Cuisines::all();
+		// $cuisines	= Cuisines::select('id','name','root_id')->get();
+		$cuisines	= Cuisines::select('id','name','root_id')->subcat()->get();
+		// $category	= $cuisines	= $cuisines->groupBy('root_id')->toArray();
+		// $cuisines	= $cuisines[0];
+		// unset($category[0]);
 		$chef		= Chefs::find($request->id);
-		return view('admin.store.form',compact('id','city','cuisines','chef'));
+		return view('admin.store.form',compact('id','city','cuisines'/*,'category'*/,'chef'));
 	}
 
 	public function edit(Request $request, $id, $s_id)

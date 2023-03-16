@@ -158,22 +158,32 @@ class Restaurants extends Model
 
 	public function getTagsAttribute()
 	{
-		$tags       = explode(',', $this->attributes['tags']);
-		$return     = array();
-		$return = Commondatas::whereIn('id',$tags)->get();
+		$tags	= explode(',', $this->attributes['tags']);
+		$return	= array();
+		$return	= Commondatas::whereIn('id',$tags)->get();
 		return $return;
 	}
 
-    public function getLogoAttribute()
-    {
-        $path   = 'storage/app/public/restaurant/'.$this->attributes['logo'];
-        if ($this->attributes['logo'] != '' && \File::exists(base_path($path))) {
-            $url    = \URL::to($path);
-        } else {
-            $url    = getCommonBanner();
-        }
-        return $url;
-    }
+	public function setLogoAttribute($value)
+	{
+		$this->attributes['logo'] = $value;
+	}
+
+	public function getLogopathAttribute()
+	{
+		return $this->attributes['logo'];
+	}
+
+	public function getLogoAttribute()
+	{
+		$path	= 'storage/app/public/restaurant/'.$this->attributes['logo'];
+		if ($this->attributes['logo'] != '' && \File::exists(base_path($path))) {
+			$url	= \URL::to($path);
+		} else {
+			$url	= getCommonBanner();
+		}
+		return $url;
+	}
 
 	public function getBudgetNameAttribute()
 	{
@@ -200,11 +210,11 @@ class Restaurants extends Model
 	 * @param  array|string $ids
 	 * @return void
 	 */
-	public function setTagsAttribute($ids)
+	/*public function setTagsAttribute($ids)
 	{
 		$this->attributes['tags'] = is_string($ids) ? $ids : implode(',', $ids);
 		return $this->attributes['tags'];
-	}
+	}*/
 
 	public function scopeApproved($query)
 	{

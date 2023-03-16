@@ -157,7 +157,6 @@ function placeMarker(location) {
 /* Map functionality End */
 
 $(function () {
-
 	$('body').on('click', '.list-group .list-group-item', function () {
 		$(this).toggleClass('active');
 	});
@@ -170,8 +169,13 @@ $(function () {
 		} else if ($button.hasClass('move-right')) {
 			actives = $('.list-left ul li.active');
 			actives.clone().appendTo('.list-right ul');
+			// console.log(actives.attr('id'));
 			actives.remove();
 		}
+		$('.list-right ul li').each(function(i) {
+			input = jQuery(`<input type="hidden" name="categories[]" value="`+$(this).attr('id').split('_')[1]+`">`);
+			$('.inputDiv').append(input);
+		});
 	});
 	$('.dual-list .selector').click(function () {
 		var $checkBox = $(this);

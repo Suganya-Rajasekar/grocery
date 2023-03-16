@@ -6511,12 +6511,12 @@ a.thumbnail.active {
   list-style: none;
   margin-bottom: 0;
   border: 1px solid #ddd;
-  padding: 7px 0;
+/*  padding: 7px 0;*/
   border-radius: 3px;
 }
 .list-group-item {
   background-color: transparent;
-  padding: 10px 20px;
+  padding: 5px 10px;
   border: 0;
 }
 .list-group-item.disabled .label,
@@ -7412,4 +7412,31 @@ nav.chefdet ul ul ul li {
 
 input[name=individual_email_2] {
   margin-top: 20px;
+}
+
+
+#myMap {max-width:100%;height: 200px;width: 920px;z-index:1;}
+.dual-list .list-group {
+  margin-top: 8px;
+}
+.list-left li, .list-right li {
+  cursor: pointer;
+}
+.list-arrows {
+  padding-top: 100px;
+}
+.list-arrows button {
+  margin-bottom: 20px;
+}
+.list-group-new {
+  overflow-y: auto;
+  height: 100px !important;
+}
+.list-group {
+  overflow-y: auto;
+  height: 150px;
+}
+.uldiv {
+  overflow-y: auto;
+  height: auto;
 }

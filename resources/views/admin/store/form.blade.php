@@ -42,10 +42,11 @@
 @include('flash::message')
 <!-- Content area -->
 <div class="content">
+	@if(isset($restaurant->id))
 	<div class="row">
 		<div class="col-md-12">
-			<form action="{!!url(getRoleName().'/availability')!!}" method="POST" class="form-horizontal operational_hour" enctype="Multipart/form-data" id="availform">
-				{{ csrf_field() }}{{ method_field('POST') }}
+			<form action="{!! url(getRoleName().'/availability') !!}" method="POST" class="form-horizontal operational_hour" enctype="Multipart/form-data" id="availform">
+				{!! csrf_field() !!}{!! method_field('POST') !!}
 				@if(getRoleName() == 'vendor')
 				<div class="row">
 					<div class="col-md-12">
@@ -54,12 +55,12 @@
 							<input type="hidden" name="id" value="{{ (isset($restaurant)) ? $restaurant->id : '' }}">
 							<input type="hidden" name="v_id" id="v_id" value="{!! isset($chef->id) ? $chef->id : '' !!}">
 							<input type="hidden"  class="form-control" name="area_code" id="area_code" value="" disabled="">
-							<div class="panel-body business-info-asw">
+							<div class="panel-body business-info-asw" data-toggle="collapse" data-target="#demo2" style="cursor:pointer;">
 								<fieldset>
 									<legend class="text-semibold">
 										<i class="fa fa-clock-o position-left"></i>
 										Update your store Operational Hours
-										<a class="control-arrow" data-toggle="collapse" data-target="#demo2">
+										<a class="control-arrow">
 											<i class="icon-circle-down2"></i>
 										</a>
 									</legend>
@@ -111,8 +112,8 @@
 				</div>
 				@endif
 			</form>
-			<form action="{!!url(getRoleName().'/working_days')!!}" method="POST" class="form-horizontal unavail_days" enctype="Multipart/form-data" id="availform">
-				{{ csrf_field() }}{{ method_field('POST') }}
+			<form action="{!! url(getRoleName().'/working_days') !!}" method="POST" class="form-horizontal unavail_days" enctype="Multipart/form-data" id="availform">
+				{!! csrf_field() !!}{!! method_field('POST') !!}
 				@if(getRoleName() == 'vendor')
 				<div class="row">
 					<div class="col-md-12">
@@ -121,12 +122,12 @@
 							<input type="hidden" name="id" value="{{ (isset($restaurant)) ? $restaurant->id : '' }}">
 							<input type="hidden" name="v_id" id="v_id" value="{!! isset($chef->id) ? $chef->id : '' !!}">
 							<input type="hidden"  class="form-control" name="area_code" id="area_code" value="" disabled="">
-							<div class="panel-body business-info-asw">
+							<div class="panel-body business-info-asw" data-toggle="collapse" data-target="#demo3" style="cursor:pointer;">
 								<fieldset>
 									<legend class="text-semibold">
 										<i class="fas fa-check-circle position-left"></i>
 										Schedule Off week days &nbsp;&nbsp;<small style="color:red;"><b>Note :</b> Uncheck the days on which you are available.</small>
-										<a class="control-arrow" data-toggle="collapse" data-target="#demo3">
+										<a class="control-arrow">
 											<i class="icon-circle-down2"></i>
 										</a>
 									</legend>
@@ -176,8 +177,8 @@
 				</div>
 				@endif
 			</form>
-			<form action="{!!url(getRoleName().'/schedule')!!}" method="POST" class="form-horizontal" enctype="Multipart/form-data" id="scheduleform">
-				{{ csrf_field() }}{{ method_field('POST') }}
+			<form action="{!! url(getRoleName().'/schedule') !!}" method="POST" class="form-horizontal" enctype="Multipart/form-data" id="scheduleform">
+				{!! csrf_field() !!}{!! method_field('POST') !!}
 				@if(getRoleName() == 'vendor') 
 				<div class="row">
 					<div class="col-md-12">
@@ -194,12 +195,12 @@
 							<input type="hidden" name="id" value="{{ (isset($restaurant)) ? $restaurant->id : '' }}">
 							<input type="hidden" name="v_id" id="v_id" value="{!! isset($chef->id) ? $chef->id : '' !!}">
 							<input type="hidden"  class="form-control" name="area_code" id="area_code" value="" disabled="">
-							<div class="panel-body business-info-asw">
+							<div class="panel-body business-info-asw" data-toggle="collapse" data-target="#demo1" style="cursor:pointer;">
 								<fieldset>
 									<legend class="text-semibold">
 										<i class="fa fa-calendar position-left"></i>
 										Schedule Off days with time in advance
-										<a class="control-arrow" data-toggle="collapse" data-target="#demo1">
+										<a class="control-arrow">
 											<i class="icon-circle-down2"></i>
 										</a>
 									</legend>
@@ -225,8 +226,8 @@
 				</div>
 				@endif
 			</form>
-			<form action="{!!url(getRoleName().'/schedule')!!}" method="POST" class="form-horizontal" enctype="Multipart/form-data" id="scheduleform">
-				{{ csrf_field() }}{{ method_field('POST') }}
+			<form action="{!! url(getRoleName().'/category') !!}" method="POST" class="form-horizontal" enctype="Multipart/form-data" id="categoryform">
+				{!! csrf_field() !!}{!! method_field('POST') !!}
 				@if(getRoleName() == 'vendor') 
 				<div class="row">
 					<div class="col-md-12">
@@ -252,7 +253,7 @@
 											<i class="icon-circle-down2"></i>
 										</a>
 									</legend>
-									<div class="row collapse in" id="demo4">
+									<div class="row collapse in show" id="demo4">
 										<div class="dual-list list-left col-md-5">
 											<div class="well text-right">
 												<div class="row">
@@ -264,11 +265,28 @@
 														</span>
 													</div>
 												</div>
-												<ul class="list-group">
-													@foreach($cuisines as $cuisine)
-													<li class="list-group-item">{!! $cuisine->name !!}</li>
+												{{-- <div class="uldiv">
+													@foreach($cuisines as $key => $cuisine)
+													@if(!empty($category[$cuisine['id']]))
+													<ul class="list-group">
+														@foreach($category[$cuisine['id']] as $val)
+														<li class="list-group-item">
+															{!! $val['name'] !!}
+														</li>
+														@endforeach
+													</ul>
+													@endif
 													@endforeach
-												</ul>
+												</div> --}}
+												<div class="uldiv">
+													<ul class="list-group">
+													@foreach($cuisines as $key => $cuisine)
+														<li id="catid_{!! $cuisine->id !!}" class="list-group-item">
+															{!! $cuisine->name !!}
+														</li>
+													@endforeach
+													</ul>
+												</div>
 											</div>
 										</div>
 										<div class="list-arrows col-md-1 text-center">
@@ -286,9 +304,16 @@
 														<input type="text" name="SearchDualList" class="form-control" placeholder="search" />
 													</div>
 												</div>
-												<ul class="list-group">
+												<ul class="list-group list-group-new">
 												</ul>
 											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="inputDiv"></div>
+										<div class="form-group text-right col-md-12">
+											<button type="submit" class="btn btn-primary font-monserret mr-2">Submit<i class="icon-arrow-right14 position-right"></i></button>
+											<a href="{!! \Request::fullUrl() !!}" class="btn btn-danger font-monserret">Cancel<i class=" icon-cancel-circle2 position-right"></i></a>
 										</div>
 									</div>
 								</fieldset>
@@ -301,8 +326,9 @@
 			</form>
 		</div>
 	</div>
-	<form action="{!!url(getRoleName().'/chef/store')!!}" method="POST" class="form-horizontal" enctype="Multipart/form-data" id="chef_form">
-		{{ csrf_field() }}{{ method_field('PUT') }}
+	@endif
+	<form action="{!! url(getRoleName().'/vendor/createStore') !!}" method="POST" class="form-horizontal" enctype="Multipart/form-data" id="chef_form">
+		{!! csrf_field() !!}{!! method_field('PUT') !!}
 		<input autocomplete="false" name="hidden" type="text" class="hidden">
 		<input type="hidden" name="c_id" id="c_id" value="{!! isset($chef->id) ? $chef->id : '0' !!}">
 		<input type="hidden" name="s_id" id="s_id" value="{!! isset($restaurant->id) ? $restaurant->id : '0' !!}">
@@ -341,7 +367,7 @@
 							</div>
 							<div class="form-group">
 								<label class="text-semibold">Select City</label>
-								<select name="location" data-placeholder="Select city" class="select" required>
+								<select name="location" data-placeholder="Select city" class="select-search" required>
 									<option value="" selected disabled>Select city</option>
 									@if(count($city)>0)
 									@foreach($city as $key => $value)
@@ -365,7 +391,7 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="text-semibold">Commission</label>
-										<input type="email" class="form-control" name="commission" placeholder="Enter commission" autocomplete="off" id="commission" value="{!! isset($restaurant->commission) ? $restaurant->commission : old('commission') !!}" required>
+										<input type="text" class="form-control" name="commission" placeholder="Enter commission" autocomplete="off" id="commission" value="{!! isset($restaurant->commission) ? $restaurant->commission : old('commission') !!}" required>
 									</div>
 								</div>
 								@endif
@@ -476,21 +502,6 @@
 	</form>
 </div>
 <!-- /content area -->
-<style type="text/css">
-	#myMap {max-width:100%;height: 200px;width: 920px;z-index:1;}
-	.dual-list .list-group {
-		margin-top: 8px;
-	}
-	.list-left li, .list-right li {
-		cursor: pointer;
-	}
-	.list-arrows {
-		padding-top: 100px;
-	}
-	.list-arrows button {
-		margin-bottom: 20px;
-	}
-</style>
 @endsection
 @section('script')	
 <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAUqxCzqXHg1jeS_RUd4p4ukmVrcXckxYA&callback=initialize" type="text/javascript"></script>

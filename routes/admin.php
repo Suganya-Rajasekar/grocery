@@ -18,6 +18,15 @@ Route::group(['as' =>'admin.','prefix'=>'admin','middleware'=>['web','auth','Che
 	Route::post('/vendor/stores/0/multidelete',[App\Http\Controllers\Admin\StoreController::class, 'multidelete'])->name('storemultidelete');
 	// Route::get('/vendor/stores/{v_id}/edit_business',[App\Http\Controllers\Admin\StoreController::class, 'index'])->where('v_id', '[0-9]+');
 
+	Route::post('/category',[App\Http\Controllers\Admin\VendorController::class, 'category']);
+	Route::post('/vendor/createStore',[App\Http\Controllers\Admin\VendorController::class, 'update']);
+	Route::post('/schedule',[App\Http\Controllers\Admin\StoreController::class, 'schedule']);
+	Route::post('/availability',[App\Http\Controllers\Admin\StoreController::class, 'availability']);
+	Route::post('/working_days',[App\Http\Controllers\Admin\StoreController::class, 'working_days']);
+	Route::resource('offtimelog', App\Http\Controllers\OfftimelogController::class);
+	Route::DELETE('offtimelog/{id}/delete',[App\Http\Controllers\OfftimelogController::class, 'destroy']);
+
+
 	Route::match(['get', 'post'], 'chefordering', [
 		'uses'	=> 'App\Http\Controllers\Admin\VendorController@ordering',
 		'as'	=> 'chef_ordering',

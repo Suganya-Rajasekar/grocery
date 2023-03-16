@@ -23,6 +23,7 @@ class Cuisines extends Model
 	public $table = 'cuisines';
 
 	public $fillable = [
+		// 'id',
 		'name',
 		'slug',
 		'image',
@@ -61,21 +62,24 @@ class Cuisines extends Model
 		'created_at', 'updated_at', 'slug'
 	];
 
-	public function getMaincatAttribute()
+	public function maincat()
 	{
-		// \DB::enableQueryLog();
-		$path   = Cuisines::where('id',$this->attributes['root_id'])->first(['id','name']);
-		// print_r(\DB::getQueryLog());exit();
-		return (!empty($path)) ? $path->name : 'Main category';
+        return $this->hasOne(self::class,'id','root_id');
+	}
+
+	public function getMaincatNameAttribute()
+	{
+		$cat	= Cuisines::where('id',$this->attributes['root_id'])->first(['id','name','root_id']);
+		return (!empty($cat)) ? $cat->name : 'Main category';
 	}
 
 	public function getImageAttribute()
 	{
-		$path   = 'storage/app/public/cuisines/'.$this->attributes['image'];
+		$path	= 'storage/app/public/cuisines/'.$this->attributes['image'];
 		if ($this->attributes['image'] != '' && \File::exists(base_path($path))) {
-			$url    = \URL::to($path);
+			$url	= \URL::to($path);
 		} else {
-			$url    = getCommonMenuItem();
+			$url	= getCommonMenuItem();
 		}
 		return $url;
 	}
@@ -83,6 +87,11 @@ class Cuisines extends Model
 	public function scopeMaincat($query)
 	{
 		$query->where('root_id', 0);
+	}
+
+	public function scopeSubcat($query)
+	{
+		$query->where('root_id', '!=', 0);
 	}
 
 	public function scopeActive($query)
